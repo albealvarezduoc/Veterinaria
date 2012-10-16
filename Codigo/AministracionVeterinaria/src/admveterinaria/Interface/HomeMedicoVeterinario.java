@@ -4,49 +4,80 @@
  */
 package admveterinaria.Interface;
 
-
-
-import Ficha.Mascota;
-import Ficha.Propietario;
+import DAO.DAOFactory;
+import DAO.Interfaces.InterfaceMascota;
+import DAO.Interfaces.InterfaceReceta;
+import DAO.MySQL.MySQLMascotaDAO;
+import DAO.MySQL.MySQLPropietarioDAO;
+import Entidades.Consulta;
+import Entidades.Mascota;
+import Entidades.Propietario;
+import Entidades.Receta;
 import javax.swing.table.DefaultTableModel;
 import Login.login;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 import javax.swing.JOptionPane;
 import validacion.Control;
+
 /**
  *
  * @author Administrador
  */
-  /**
-     * Creates new form HomeMedicoVeterinario
-     */
+/**
+ * Creates new form HomeMedicoVeterinario
+ */
 public class HomeMedicoVeterinario extends javax.swing.JFrame {
+
     Mascota mascota;
     Propietario propietario;
-    Control control;
-        
-    
-    /** Crear nuevo formulario HomeMedicoVeterinario */ 
-   
-
+    MySQLMascotaDAO objmascDAO = null;
+    MySQLPropietarioDAO objProDAO = null;
+    /**
+     * Crear nuevo formulario HomeMedicoVeterinario
+     */
     DefaultTableModel dtmDatosListarRecetas = new DefaultTableModel();
-
+    DefaultTableModel dtmDatosListarMascotas = new DefaultTableModel();
+    DefaultTableModel dtmDatosValeVentas = new DefaultTableModel();
+    DefaultTableModel dtmDatosListadoVales = new DefaultTableModel();
+    
+    private Object nmMensaje;
 
     public HomeMedicoVeterinario() {
+        
+ 
 
-        this.dtmDatosListarRecetas = new DefaultTableModel();
-        this.dtmDatosListarRecetas.addColumn("Rut");
-        this.dtmDatosListarRecetas.addColumn("Nombre Apellidos");
-        this.dtmDatosListarRecetas.addColumn("Medicamentos");
-        this.dtmDatosListarRecetas.addColumn("Dosis Medicamentos");
-        this.dtmDatosListarRecetas.addColumn("Transcripción");
+        this.dtmDatosListarMascotas = new DefaultTableModel();
+        this.dtmDatosListarMascotas.addColumn("Numero Ficha");
+        this.dtmDatosListarMascotas.addColumn("Nombre");
+        this.dtmDatosListarMascotas.addColumn("Fecha Nacimiento");
+        this.dtmDatosListarMascotas.addColumn("Edad");
+        this.dtmDatosListarMascotas.addColumn("Raza");
+        this.dtmDatosListarMascotas.addColumn("Sexo");
+        this.dtmDatosListarMascotas.addColumn("Especie");
         
+        this.dtmDatosValeVentas = new DefaultTableModel();
+        dtmDatosValeVentas.addColumn("Fecha");
+        dtmDatosValeVentas.addColumn("Código Interno");
+        dtmDatosValeVentas.addColumn("Nombre");
+        dtmDatosValeVentas.addColumn("Cantidad");
+        dtmDatosValeVentas.addColumn("Precio");
+        
+        
+        dtmDatosListadoVales.addColumn("Fecha");
+        dtmDatosListadoVales.addColumn("Codigo Interno");
+        dtmDatosListadoVales.addColumn("Nombre");
+        dtmDatosListadoVales.addColumn("Cantidad");
+        dtmDatosListadoVales.addColumn("Precio");
+        dtmDatosListadoVales.addColumn("TOTAL");
+                
+
         initComponents();
-        
-        control=new Control();
-    } 
-    
-    
-  
+
+
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -62,20 +93,19 @@ public class HomeMedicoVeterinario extends javax.swing.JFrame {
         jMenu5 = new javax.swing.JMenu();
         jMenuItem6 = new javax.swing.JMenuItem();
         jColorChooser1 = new javax.swing.JColorChooser();
+        jOptNmMensaje = new javax.swing.JOptionPane();
+        jScrollPane12 = new javax.swing.JScrollPane();
+        jTree1 = new javax.swing.JTree();
         jSeparator1 = new javax.swing.JSeparator();
         jDesktopPane1 = new javax.swing.JDesktopPane();
         jIntCrearFicha = new javax.swing.JInternalFrame();
-        txtNumeroFicha = new javax.swing.JTextField();
-        jSeparator2 = new javax.swing.JSeparator();
-        jLabel10 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jPanel1 = new javax.swing.JPanel();
+        jPCrearFicha = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         txtRut = new javax.swing.JTextField();
-        txtNombreMasc = new javax.swing.JTextField();
+        txtNomMasc = new javax.swing.JTextField();
         txtApellido = new javax.swing.JTextField();
         txtFono = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
@@ -90,78 +120,114 @@ public class HomeMedicoVeterinario extends javax.swing.JFrame {
         jLabel16 = new javax.swing.JLabel();
         jLabel17 = new javax.swing.JLabel();
         txtNombrePro = new javax.swing.JTextField();
-        txtFechaNacimiento = new javax.swing.JTextField();
+        txtFechaNac = new javax.swing.JTextField();
         txtEdad = new javax.swing.JTextField();
         txtRaza = new javax.swing.JTextField();
         cmbSexoMasc = new javax.swing.JComboBox();
         jBtnCrerFicha = new javax.swing.JButton();
         jBtnCancelar = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
+        jSeparator2 = new javax.swing.JSeparator();
+        jLabel10 = new javax.swing.JLabel();
+        txtTipo = new javax.swing.JTextField();
+        jLabel70 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
         jIntBuscarFicha = new javax.swing.JInternalFrame();
-        jPanel2 = new javax.swing.JPanel();
+        jPBuscFicha = new javax.swing.JPanel();
         jLabel18 = new javax.swing.JLabel();
-        jTextField12 = new javax.swing.JTextField();
+        jTxtRutProp = new javax.swing.JTextField();
         jSeparator3 = new javax.swing.JSeparator();
-        jButton4 = new javax.swing.JButton();
-        jLabel20 = new javax.swing.JLabel();
-        jLabel21 = new javax.swing.JLabel();
+        jBtnBuscarMasc = new javax.swing.JButton();
         jLabel22 = new javax.swing.JLabel();
-        jLabel23 = new javax.swing.JLabel();
-        jLabel24 = new javax.swing.JLabel();
-        jLabel25 = new javax.swing.JLabel();
-        jTextField15 = new javax.swing.JTextField();
-        jTextField16 = new javax.swing.JTextField();
-        jTextField17 = new javax.swing.JTextField();
-        jTextField18 = new javax.swing.JTextField();
-        jTextField19 = new javax.swing.JTextField();
-        jComboBox2 = new javax.swing.JComboBox();
         jBtnModificarFicha = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
         jLabel19 = new javax.swing.JLabel();
+        jScrollPane10 = new javax.swing.JScrollPane();
+        jTblMascotas = new javax.swing.JTable();
+        jBtnLimpiarTbl = new javax.swing.JButton();
         jIntModificarFicha = new javax.swing.JInternalFrame();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jLabel26 = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea2 = new javax.swing.JTextArea();
-        jSeparator4 = new javax.swing.JSeparator();
+        jPModificarHistorial = new javax.swing.JPanel();
         jLabel36 = new javax.swing.JLabel();
-        jIntGenerarReceta = new javax.swing.JInternalFrame();
-        jLabel27 = new javax.swing.JLabel();
-        jTextField13 = new javax.swing.JTextField();
-        jLabel28 = new javax.swing.JLabel();
-        jTextField14 = new javax.swing.JTextField();
-        jLabel29 = new javax.swing.JLabel();
-        jLabel30 = new javax.swing.JLabel();
-        jTextField20 = new javax.swing.JTextField();
-        jLabel31 = new javax.swing.JLabel();
+        jLabel23 = new javax.swing.JLabel();
+        jLabel21 = new javax.swing.JLabel();
+        jSeparator4 = new javax.swing.JSeparator();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        TxtMedicamentos = new javax.swing.JTextArea();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        TxtDiagnostico = new javax.swing.JTextArea();
+        jLabel26 = new javax.swing.JLabel();
+        jBtnHistCli = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel24 = new javax.swing.JLabel();
+        jSeparator16 = new javax.swing.JSeparator();
+        TxtFechaHisCli = new javax.swing.JTextField();
         jLabel32 = new javax.swing.JLabel();
-        jLabel33 = new javax.swing.JLabel();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        jTextArea3 = new javax.swing.JTextArea();
-        jScrollPane4 = new javax.swing.JScrollPane();
-        jTextArea4 = new javax.swing.JTextArea();
-        jScrollPane5 = new javax.swing.JScrollPane();
-        jTextArea5 = new javax.swing.JTextArea();
-        jButton5 = new javax.swing.JButton();
-        jButton7 = new javax.swing.JButton();
-        jSeparator5 = new javax.swing.JSeparator();
-        jTextField22 = new javax.swing.JTextField();
         jLabel38 = new javax.swing.JLabel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        TxtExamenesSolicitados = new javax.swing.JTextArea();
+        jLabel71 = new javax.swing.JLabel();
+        jScrollPane11 = new javax.swing.JScrollPane();
+        txtTratamiento = new javax.swing.JTextArea();
+        jLabel72 = new javax.swing.JLabel();
+        CmbVacunaAdm = new javax.swing.JComboBox();
+        jLabel73 = new javax.swing.JLabel();
+        TxtFechaVacuna = new javax.swing.JTextField();
+        jLabel74 = new javax.swing.JLabel();
+        TxtFechaDesp = new javax.swing.JTextField();
+        TxtFechaControl = new javax.swing.JTextField();
+        jLabel75 = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        TxtHallazgoClinico = new javax.swing.JTextArea();
+        CmbIndicacion = new javax.swing.JComboBox();
+        jLabel76 = new javax.swing.JLabel();
+        TxtHoraControl = new javax.swing.JTextField();
+        jLabel77 = new javax.swing.JLabel();
+        jLabel78 = new javax.swing.JLabel();
+        jLabel79 = new javax.swing.JLabel();
+        CmbDesp = new javax.swing.JComboBox();
+        jIntGenerarReceta = new javax.swing.JInternalFrame();
+        jPGenerarReceta = new javax.swing.JPanel();
+        btnCancelar = new javax.swing.JButton();
+        btnGenerar = new javax.swing.JButton();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        TxtRp = new javax.swing.JTextArea();
+        jLabel33 = new javax.swing.JLabel();
+        jSeparator5 = new javax.swing.JSeparator();
+        TxtRutProp = new javax.swing.JTextField();
+        LbRut = new javax.swing.JLabel();
+        jLabel27 = new javax.swing.JLabel();
+        txtEspecie = new javax.swing.JTextField();
+        jLabel28 = new javax.swing.JLabel();
+        jLabel29 = new javax.swing.JLabel();
+        txtEdadMasc = new javax.swing.JTextField();
+        jLabel25 = new javax.swing.JLabel();
+        jLabel31 = new javax.swing.JLabel();
+        CbMascotaAcosiada = new javax.swing.JComboBox();
+        BtnBuscarMasc = new javax.swing.JButton();
+        jLabel80 = new javax.swing.JLabel();
+        txtSexo = new javax.swing.JTextField();
+        jTextRazaMascota = new javax.swing.JTextField();
+        jLabel20 = new javax.swing.JLabel();
+        txtFechaCreacion = new javax.swing.JTextField();
+        jLabel30 = new javax.swing.JLabel();
+        jLabel81 = new javax.swing.JLabel();
+        jLabel82 = new javax.swing.JLabel();
+        jLabel83 = new javax.swing.JLabel();
         jIntListarRecetas = new javax.swing.JInternalFrame();
-        jLab = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
         jLabel42 = new javax.swing.JLabel();
-        jSeparator9 = new javax.swing.JSeparator();
-        jTextField21 = new javax.swing.JTextField();
-        jButton8 = new javax.swing.JButton();
         jScrollPane6 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        jButton9 = new javax.swing.JButton();
-        jButton10 = new javax.swing.JButton();
+        jTablaReceta = new javax.swing.JTable();
         jSeparator6 = new javax.swing.JSeparator();
+        txtFechaEmision = new javax.swing.JTextField();
+        jButton8 = new javax.swing.JButton();
+        jLab = new javax.swing.JLabel();
+        jSeparator9 = new javax.swing.JSeparator();
+        jButton10 = new javax.swing.JButton();
+        jButton9 = new javax.swing.JButton();
+        jLabel84 = new javax.swing.JLabel();
         jIntReservarAnularListarHora = new javax.swing.JInternalFrame();
         jCalendar1 = new com.toedter.calendar.JCalendar();
         jLabel46 = new javax.swing.JLabel();
@@ -193,65 +259,89 @@ public class HomeMedicoVeterinario extends javax.swing.JFrame {
         jButton17 = new javax.swing.JButton();
         jSeparator11 = new javax.swing.JSeparator();
         jSeparator12 = new javax.swing.JSeparator();
-        jIntAdministrarProductos = new javax.swing.JInternalFrame();
+        jIntCrearProductos = new javax.swing.JInternalFrame();
+        jPanel2 = new javax.swing.JPanel();
+        jTextField23 = new javax.swing.JTextField();
         jLabel34 = new javax.swing.JLabel();
         jLabel35 = new javax.swing.JLabel();
-        jTextField23 = new javax.swing.JTextField();
-        jLabel37 = new javax.swing.JLabel();
-        jTextField24 = new javax.swing.JTextField();
-        jLabel39 = new javax.swing.JLabel();
-        jComboBox3 = new javax.swing.JComboBox();
         jLabel41 = new javax.swing.JLabel();
-        jButton12 = new javax.swing.JButton();
         jTextField25 = new javax.swing.JTextField();
-        jLabel43 = new javax.swing.JLabel();
+        jTextField24 = new javax.swing.JTextField();
+        jLabel37 = new javax.swing.JLabel();
+        jComboBox3 = new javax.swing.JComboBox();
+        jLabel39 = new javax.swing.JLabel();
         jTextField26 = new javax.swing.JTextField();
+        jLabel43 = new javax.swing.JLabel();
         jLabel44 = new javax.swing.JLabel();
         jTextField32 = new javax.swing.JTextField();
-        jLabel45 = new javax.swing.JLabel();
-        jLabel55 = new javax.swing.JLabel();
         jButton18 = new javax.swing.JButton();
         jButton19 = new javax.swing.JButton();
-        jButton20 = new javax.swing.JButton();
+        jSeparator13 = new javax.swing.JSeparator();
+        jSeparator14 = new javax.swing.JSeparator();
+        jIntAgregarStock = new javax.swing.JInternalFrame();
+        jPanel3 = new javax.swing.JPanel();
+        jLabel45 = new javax.swing.JLabel();
         jLabel56 = new javax.swing.JLabel();
-        jIntListarEliminarProducto = new javax.swing.JInternalFrame();
+        jLabel60 = new javax.swing.JLabel();
+        jTextField2 = new javax.swing.JTextField();
+        jTextField3 = new javax.swing.JTextField();
+        jButton4 = new javax.swing.JButton();
+        jSeparator17 = new javax.swing.JSeparator();
+        jLabel61 = new javax.swing.JLabel();
+        jLabel64 = new javax.swing.JLabel();
+        jLabel65 = new javax.swing.JLabel();
+        jLabel68 = new javax.swing.JLabel();
+        jTextField4 = new javax.swing.JTextField();
+        jTextField5 = new javax.swing.JTextField();
+        jTextField6 = new javax.swing.JTextField();
+        jTextField7 = new javax.swing.JTextField();
+        jLabel85 = new javax.swing.JLabel();
+        jTextField8 = new javax.swing.JTextField();
+        jButton5 = new javax.swing.JButton();
+        jIntListarProductos = new javax.swing.JInternalFrame();
         jLabel57 = new javax.swing.JLabel();
         jLabel58 = new javax.swing.JLabel();
         jTextField33 = new javax.swing.JTextField();
         jButton21 = new javax.swing.JButton();
         jScrollPane8 = new javax.swing.JScrollPane();
         jTable3 = new javax.swing.JTable();
-        jButton22 = new javax.swing.JButton();
         jSeparator10 = new javax.swing.JSeparator();
-        jButton23 = new javax.swing.JButton();
         jButton24 = new javax.swing.JButton();
-        jIntIngresarVenta = new javax.swing.JInternalFrame();
-        jLabel59 = new javax.swing.JLabel();
-        jLabel60 = new javax.swing.JLabel();
-        jLabel61 = new javax.swing.JLabel();
+        jIntIngresarValeVenta = new javax.swing.JInternalFrame();
+        jPanel4 = new javax.swing.JPanel();
         jLabel63 = new javax.swing.JLabel();
-        jLabel64 = new javax.swing.JLabel();
-        jLabel65 = new javax.swing.JLabel();
-        jTextField34 = new javax.swing.JTextField();
+        jLabel59 = new javax.swing.JLabel();
         jTextField35 = new javax.swing.JTextField();
         jLabel66 = new javax.swing.JLabel();
         jLabel67 = new javax.swing.JLabel();
-        jTextField36 = new javax.swing.JTextField();
-        jTextField37 = new javax.swing.JTextField();
-        jLabel68 = new javax.swing.JLabel();
-        jTextField38 = new javax.swing.JTextField();
-        jLabel69 = new javax.swing.JLabel();
         jTextField39 = new javax.swing.JTextField();
         jTextField40 = new javax.swing.JTextField();
         jButton25 = new javax.swing.JButton();
-        jLabel62 = new javax.swing.JLabel();
-        jScrollPane9 = new javax.swing.JScrollPane();
-        jTable4 = new javax.swing.JTable();
-        jSeparator13 = new javax.swing.JSeparator();
-        jSeparator14 = new javax.swing.JSeparator();
         jSeparator15 = new javax.swing.JSeparator();
-        jTextField41 = new javax.swing.JTextField();
-        jButton26 = new javax.swing.JButton();
+        jTextField1 = new javax.swing.JTextField();
+        jLabel55 = new javax.swing.JLabel();
+        jLabel86 = new javax.swing.JLabel();
+        jTextField9 = new javax.swing.JTextField();
+        jSeparator18 = new javax.swing.JSeparator();
+        jButton3 = new javax.swing.JButton();
+        jScrollPane9 = new javax.swing.JScrollPane();
+        jTblValeVentas = new javax.swing.JTable();
+        jTextField10 = new javax.swing.JTextField();
+        jLabel62 = new javax.swing.JLabel();
+        jLabel69 = new javax.swing.JLabel();
+        jTextField11 = new javax.swing.JTextField();
+        jButton7 = new javax.swing.JButton();
+        jIntListarVales = new javax.swing.JInternalFrame();
+        jPanel5 = new javax.swing.JPanel();
+        jSeparator19 = new javax.swing.JSeparator();
+        jSeparator20 = new javax.swing.JSeparator();
+        jButton12 = new javax.swing.JButton();
+        jScrollPane13 = new javax.swing.JScrollPane();
+        jTblValeVentas1 = new javax.swing.JTable();
+        jLabel94 = new javax.swing.JLabel();
+        jTextField15 = new javax.swing.JTextField();
+        jButton20 = new javax.swing.JButton();
+        jLabel95 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu2 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -263,9 +353,11 @@ public class HomeMedicoVeterinario extends javax.swing.JFrame {
         jMenuItem7 = new javax.swing.JMenuItem();
         jMenu7 = new javax.swing.JMenu();
         jMenuItem10 = new javax.swing.JMenuItem();
+        jMenuItem9 = new javax.swing.JMenuItem();
         jMenuItem12 = new javax.swing.JMenuItem();
         jMenu8 = new javax.swing.JMenu();
         jMenuItem8 = new javax.swing.JMenuItem();
+        jMenuItem3 = new javax.swing.JMenuItem();
 
         jMenu1.setText("jMenu1");
 
@@ -277,6 +369,8 @@ public class HomeMedicoVeterinario extends javax.swing.JFrame {
 
         jMenuItem6.setText("jMenuItem6");
 
+        jScrollPane12.setViewportView(jTree1);
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Administración \"MÉDICO VETERINARIO\"");
         setMinimumSize(new java.awt.Dimension(970, 500));
@@ -287,14 +381,17 @@ public class HomeMedicoVeterinario extends javax.swing.JFrame {
         jDesktopPane1.setLocation(new java.awt.Point(0, 20));
         jDesktopPane1.setMinimumSize(new java.awt.Dimension(700, 700));
 
+        jIntCrearFicha.setBackground(javax.swing.UIManager.getDefaults().getColor("CheckBoxMenuItem.background"));
         jIntCrearFicha.setClosable(true);
         jIntCrearFicha.setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
+        jIntCrearFicha.setForeground(new java.awt.Color(153, 153, 153));
         jIntCrearFicha.setIconifiable(true);
         jIntCrearFicha.setMaximizable(true);
         jIntCrearFicha.setResizable(true);
         jIntCrearFicha.setTitle("Crear Ficha de la Mascota");
         jIntCrearFicha.setMinimumSize(new java.awt.Dimension(0, 0));
         jIntCrearFicha.setPreferredSize(new java.awt.Dimension(800, 691));
+        jIntCrearFicha.setVerifyInputWhenFocusTarget(false);
         jIntCrearFicha.setVisible(false);
         jIntCrearFicha.addAncestorListener(new javax.swing.event.AncestorListener() {
             public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
@@ -307,33 +404,30 @@ public class HomeMedicoVeterinario extends javax.swing.JFrame {
             }
         });
 
-        txtNumeroFicha.setBackground(new java.awt.Color(153, 153, 153));
-        txtNumeroFicha.setEditable(false);
-        txtNumeroFicha.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtNumeroFichaActionPerformed(evt);
-            }
-        });
+        jPCrearFicha.setBackground(new java.awt.Color(153, 153, 153));
+        jPCrearFicha.setPreferredSize(new java.awt.Dimension(911, 700));
 
-        jSeparator2.setBackground(new java.awt.Color(0, 0, 0));
-
-        jLabel10.setText("Numero de Ficha");
-
-        jLabel3.setFont(new java.awt.Font("Apple Braille", 1, 24)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(0, 102, 102));
-        jLabel3.setText("        FICHA CLÍNICA MASCOTA  ");
-
+        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("Rut");
 
+        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setText("Nombre ");
 
+        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setText("Apellido");
 
+        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
         jLabel7.setText("Fono");
 
         txtRut.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtRutActionPerformed(evt);
+            }
+        });
+
+        txtNomMasc.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtNomMascActionPerformed(evt);
             }
         });
 
@@ -343,31 +437,38 @@ public class HomeMedicoVeterinario extends javax.swing.JFrame {
             }
         });
 
+        jLabel8.setForeground(new java.awt.Color(255, 255, 255));
         jLabel8.setText("Dirección");
 
+        jLabel9.setForeground(new java.awt.Color(255, 255, 255));
         jLabel9.setText("E-Mail");
 
-        jLabel11.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
-        jLabel11.setForeground(new java.awt.Color(0, 102, 102));
-        jLabel11.setText("PROPIETARIO ");
+        jLabel11.setFont(new java.awt.Font("Comic Sans MS", 0, 24)); // NOI18N
+        jLabel11.setForeground(new java.awt.Color(51, 102, 255));
+        jLabel11.setText("Propietario");
 
-        jLabel12.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
-        jLabel12.setForeground(new java.awt.Color(0, 102, 102));
-        jLabel12.setText("        MASCOTA");
+        jLabel12.setFont(new java.awt.Font("Comic Sans MS", 0, 24)); // NOI18N
+        jLabel12.setForeground(new java.awt.Color(51, 102, 255));
+        jLabel12.setText("Mascota");
 
+        jLabel13.setForeground(new java.awt.Color(255, 255, 255));
         jLabel13.setText("Nombre ");
 
+        jLabel14.setForeground(new java.awt.Color(255, 255, 255));
         jLabel14.setText("Fecha de Nacimiento");
 
+        jLabel15.setForeground(new java.awt.Color(255, 255, 255));
         jLabel15.setText("Edad");
 
+        jLabel16.setForeground(new java.awt.Color(255, 255, 255));
         jLabel16.setText("Raza");
 
+        jLabel17.setForeground(new java.awt.Color(255, 255, 255));
         jLabel17.setText("Sexo");
 
-        txtFechaNacimiento.addActionListener(new java.awt.event.ActionListener() {
+        txtFechaNac.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtFechaNacimientoActionPerformed(evt);
+                txtFechaNacActionPerformed(evt);
             }
         });
 
@@ -384,6 +485,8 @@ public class HomeMedicoVeterinario extends javax.swing.JFrame {
             }
         });
 
+        jBtnCrerFicha.setBackground(new java.awt.Color(102, 153, 255));
+        jBtnCrerFicha.setForeground(new java.awt.Color(255, 255, 255));
         jBtnCrerFicha.setText("Crear");
         jBtnCrerFicha.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -391,6 +494,8 @@ public class HomeMedicoVeterinario extends javax.swing.JFrame {
             }
         });
 
+        jBtnCancelar.setBackground(new java.awt.Color(102, 153, 255));
+        jBtnCancelar.setForeground(new java.awt.Color(255, 255, 255));
         jBtnCancelar.setText("Cancelar");
         jBtnCancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -398,171 +503,202 @@ public class HomeMedicoVeterinario extends javax.swing.JFrame {
             }
         });
 
-        org.jdesktop.layout.GroupLayout jPanel1Layout = new org.jdesktop.layout.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel1Layout.createSequentialGroup()
-                .add(41, 41, 41)
-                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(jPanel1Layout.createSequentialGroup()
-                        .add(jBtnCancelar, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 131, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                        .add(0, 0, Short.MAX_VALUE))
-                    .add(jPanel1Layout.createSequentialGroup()
-                        .add(38, 38, 38)
-                        .add(jLabel11)
-                        .add(150, 150, 150)
-                        .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(jPanel1Layout.createSequentialGroup()
-                                .add(jLabel12, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 247, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap())
-                            .add(jPanel1Layout.createSequentialGroup()
-                                .add(143, 143, 143)
+        jLabel3.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel3.setFont(new java.awt.Font("Apple Braille", 1, 24)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(45, 91, 210));
+        jLabel3.setText("        FICHA CLÍNICA MASCOTA  ");
+
+        jSeparator2.setBackground(new java.awt.Color(255, 255, 255));
+        jSeparator2.setForeground(new java.awt.Color(255, 255, 255));
+
+        jLabel10.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel10.setText("Ej: 12345678-9");
+
+        txtTipo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtTipoActionPerformed(evt);
+            }
+        });
+
+        jLabel70.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel70.setText("Especie");
+
+        jButton1.setText("Limpiar");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        org.jdesktop.layout.GroupLayout jPCrearFichaLayout = new org.jdesktop.layout.GroupLayout(jPCrearFicha);
+        jPCrearFicha.setLayout(jPCrearFichaLayout);
+        jPCrearFichaLayout.setHorizontalGroup(
+            jPCrearFichaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jPCrearFichaLayout.createSequentialGroup()
+                .add(55, 55, 55)
+                .add(jPCrearFichaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
+                    .add(jPCrearFichaLayout.createSequentialGroup()
+                        .add(jPCrearFichaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(jPCrearFichaLayout.createSequentialGroup()
+                                .add(jPCrearFichaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                                    .add(jPCrearFichaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                                        .add(jPCrearFichaLayout.createSequentialGroup()
+                                            .add(68, 68, 68)
+                                            .add(jLabel11)
+                                            .add(117, 117, 117))
+                                        .add(jPCrearFichaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                                            .add(jPCrearFichaLayout.createSequentialGroup()
+                                                .add(37, 37, 37)
+                                                .add(jPCrearFichaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
+                                                    .add(txtFono, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 106, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                                                    .add(txtDireccion, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 275, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                                                    .add(jPCrearFichaLayout.createSequentialGroup()
+                                                        .add(txtRut, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 113, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                                                        .add(18, 18, 18)
+                                                        .add(jLabel10))
+                                                    .add(org.jdesktop.layout.GroupLayout.TRAILING, jPCrearFichaLayout.createSequentialGroup()
+                                                        .add(jPCrearFichaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                                                            .add(txtNombrePro, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 150, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                                                            .add(txtApellido, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 150, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                                                        .add(125, 125, 125))))
+                                            .add(jLabel7)
+                                            .add(jLabel8)
+                                            .add(jLabel9)
+                                            .add(jLabel5)
+                                            .add(jLabel6)
+                                            .add(jLabel4, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 39, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+                                    .add(jPCrearFichaLayout.createSequentialGroup()
+                                        .add(36, 36, 36)
+                                        .add(txtEmail, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 161, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 55, Short.MAX_VALUE)
+                                .add(jPCrearFichaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                                    .add(org.jdesktop.layout.GroupLayout.TRAILING, jPCrearFichaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                                        .add(jLabel70)
+                                        .add(jPCrearFichaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                                            .add(org.jdesktop.layout.GroupLayout.LEADING, jLabel15)
+                                            .add(jPCrearFichaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                                                .add(jLabel17)
+                                                .add(jLabel16)))
+                                        .add(jLabel13)
+                                        .add(jLabel14))
+                                    .add(org.jdesktop.layout.GroupLayout.TRAILING, jLabel12, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 106, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED))
+                            .add(jPCrearFichaLayout.createSequentialGroup()
+                                .add(jBtnCancelar, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 131, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .add(jButton1)
+                                .add(110, 110, 110)))
+                        .add(jPCrearFichaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(txtRaza, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 99, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(txtNomMasc, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 137, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(txtEdad, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 52, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(txtFechaNac, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 117, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(cmbSexoMasc, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 117, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(jPCrearFichaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
                                 .add(jBtnCrerFicha, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 122, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                .add(0, 0, Short.MAX_VALUE))))))
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(jLabel4, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 45, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(jLabel5)
-                    .add(jLabel6)
-                    .add(jLabel7)
-                    .add(jLabel8)
-                    .add(jLabel9))
-                .add(82, 82, 82)
-                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
-                        .add(txtApellido)
-                        .add(txtFono, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 106, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                        .add(txtDireccion)
-                        .add(txtEmail, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 161, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                    .add(txtRut, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 106, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(txtNombrePro, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 143, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .add(97, 97, 97)
-                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(jPanel1Layout.createSequentialGroup()
-                        .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(jLabel15)
-                            .add(jLabel16))
-                        .add(49, 326, Short.MAX_VALUE))
-                    .add(jPanel1Layout.createSequentialGroup()
-                        .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(jLabel14)
-                            .add(jLabel17)
-                            .add(jLabel13))
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                        .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(jPanel1Layout.createSequentialGroup()
-                                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                                    .add(txtEdad, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 47, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                    .add(txtRaza, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 86, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                    .add(txtNombreMasc, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 137, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                                .add(0, 0, Short.MAX_VALUE))
-                            .add(jPanel1Layout.createSequentialGroup()
-                                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                                    .add(org.jdesktop.layout.GroupLayout.LEADING, cmbSexoMasc, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 117, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                    .add(org.jdesktop.layout.GroupLayout.LEADING, txtFechaNacimiento, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 116, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                                .addContainerGap(96, Short.MAX_VALUE))))))
+                                .add(txtTipo, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 117, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))))
+                    .add(jPCrearFichaLayout.createSequentialGroup()
+                        .add(117, 117, 117)
+                        .add(jLabel3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 411, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(jSeparator2))
+                .addContainerGap(68, Short.MAX_VALUE))
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel1Layout.createSequentialGroup()
-                .add(43, 43, 43)
-                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jLabel11)
-                    .add(jLabel12))
-                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(jPanel1Layout.createSequentialGroup()
-                        .add(45, 45, 45)
-                        .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                            .add(jLabel4)
-                            .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                                .add(txtRut, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                .add(jLabel13))))
-                    .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(txtNombreMasc, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
-                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(jPanel1Layout.createSequentialGroup()
-                        .add(24, 24, 24)
-                        .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                            .add(jLabel5)
-                            .add(jLabel14)))
-                    .add(jPanel1Layout.createSequentialGroup()
+        jPCrearFichaLayout.setVerticalGroup(
+            jPCrearFichaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jPCrearFichaLayout.createSequentialGroup()
+                .addContainerGap()
+                .add(jLabel3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 39, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(jSeparator2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 16, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(jPCrearFichaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jPCrearFichaLayout.createSequentialGroup()
+                        .add(jPCrearFichaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                            .add(jLabel12, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 46, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(jLabel11))
+                        .add(jPCrearFichaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(jPCrearFichaLayout.createSequentialGroup()
+                                .add(jPCrearFichaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                                    .add(jPCrearFichaLayout.createSequentialGroup()
+                                        .add(79, 79, 79)
+                                        .add(jPCrearFichaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                                            .add(jLabel14)
+                                            .add(txtFechaNac, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+                                    .add(jPCrearFichaLayout.createSequentialGroup()
+                                        .add(31, 31, 31)
+                                        .add(jPCrearFichaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                                            .add(txtNomMasc, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 27, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                                            .add(jLabel13))))
+                                .add(26, 26, 26)
+                                .add(jPCrearFichaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                                    .add(jLabel15)
+                                    .add(txtEdad, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                                .add(24, 24, 24)
+                                .add(jPCrearFichaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                                    .add(jLabel16)
+                                    .add(txtRaza))
+                                .add(41, 41, 41)
+                                .add(jPCrearFichaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                                    .add(jLabel17)
+                                    .add(cmbSexoMasc, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 27, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                                .add(jPCrearFichaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                                    .add(jPCrearFichaLayout.createSequentialGroup()
+                                        .add(46, 46, 46)
+                                        .add(jLabel70, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 16, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                                    .add(jPCrearFichaLayout.createSequentialGroup()
+                                        .add(50, 50, 50)
+                                        .add(txtTipo, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))))
+                            .add(jPCrearFichaLayout.createSequentialGroup()
+                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                                .add(jLabel4)
+                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                                .add(jPCrearFichaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                                    .add(txtRut, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                                    .add(jLabel10))
+                                .add(17, 17, 17)
+                                .add(jLabel5)
+                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                                .add(txtNombrePro, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                                .add(22, 22, 22)
+                                .add(jLabel6)
+                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                                .add(txtApellido, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                                .add(17, 17, 17)
+                                .add(jLabel7)
+                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                                .add(txtFono, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                                .add(18, 18, 18)
+                                .add(jLabel8)
+                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                                .add(txtDireccion, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                                .add(18, 18, 18)
+                                .add(jLabel9)))
                         .add(18, 18, 18)
-                        .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(txtNombrePro, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(txtFechaNacimiento, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))))
-                .add(23, 23, 23)
-                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(txtApellido, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(jLabel6)
-                    .add(jLabel15)
-                    .add(txtEdad, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .add(24, 24, 24)
-                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(txtFono, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(jLabel7)
-                    .add(jLabel16)
-                    .add(txtRaza, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .add(18, 18, 18)
-                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(jPanel1Layout.createSequentialGroup()
-                        .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                            .add(jLabel8)
-                            .add(txtDireccion, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(jLabel17))
-                        .add(18, 18, 18)
-                        .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                            .add(txtEmail, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(jLabel9)))
-                    .add(cmbSexoMasc, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 62, Short.MAX_VALUE)
-                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jBtnCancelar, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 38, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(jBtnCrerFicha, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 38, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .add(22, 22, 22))
+                        .add(txtEmail, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .add(74, 74, 74)
+                        .add(jPCrearFichaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(jBtnCancelar, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 38, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(jBtnCrerFicha, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 38, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                        .add(78, 78, 78))
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, jPCrearFichaLayout.createSequentialGroup()
+                        .add(0, 0, Short.MAX_VALUE)
+                        .add(jButton1)
+                        .add(70, 70, 70))))
         );
 
         org.jdesktop.layout.GroupLayout jIntCrearFichaLayout = new org.jdesktop.layout.GroupLayout(jIntCrearFicha.getContentPane());
         jIntCrearFicha.getContentPane().setLayout(jIntCrearFichaLayout);
         jIntCrearFichaLayout.setHorizontalGroup(
             jIntCrearFichaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, jIntCrearFichaLayout.createSequentialGroup()
-                .add(0, 0, Short.MAX_VALUE)
-                .add(jIntCrearFichaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(org.jdesktop.layout.GroupLayout.TRAILING, jIntCrearFichaLayout.createSequentialGroup()
-                        .add(jLabel10)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                        .add(txtNumeroFicha, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 123, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                        .add(109, 109, 109))
-                    .add(org.jdesktop.layout.GroupLayout.TRAILING, jIntCrearFichaLayout.createSequentialGroup()
-                        .add(jSeparator2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 760, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                        .add(30, 30, 30))))
             .add(jIntCrearFichaLayout.createSequentialGroup()
-                .add(jIntCrearFichaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(jIntCrearFichaLayout.createSequentialGroup()
-                        .add(167, 167, 167)
-                        .add(jLabel3))
-                    .add(jIntCrearFichaLayout.createSequentialGroup()
-                        .add(36, 36, 36)
-                        .add(jPanel1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap()
+                .add(jPCrearFicha, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 764, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jIntCrearFichaLayout.setVerticalGroup(
             jIntCrearFichaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(jIntCrearFichaLayout.createSequentialGroup()
-                .add(16, 16, 16)
-                .add(jLabel3)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 12, Short.MAX_VALUE)
-                .add(jIntCrearFichaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(txtNumeroFicha, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(jLabel10))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(jSeparator2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 16, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(jPanel1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(31, 31, 31))
+                .addContainerGap()
+                .add(jPCrearFicha, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 719, Short.MAX_VALUE))
         );
 
         jIntCrearFicha.setBounds(0, 0, 800, 691);
@@ -570,12 +706,14 @@ public class HomeMedicoVeterinario extends javax.swing.JFrame {
         jIntCrearFicha.getAccessibleContext().setAccessibleName("Crear Ficha");
         jIntCrearFicha.getAccessibleContext().setAccessibleParent(jIntCrearFicha);
 
+        jIntBuscarFicha.setBackground(java.awt.Color.darkGray);
         jIntBuscarFicha.setClosable(true);
         jIntBuscarFicha.setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
         jIntBuscarFicha.setIconifiable(true);
         jIntBuscarFicha.setMaximizable(true);
         jIntBuscarFicha.setResizable(true);
         jIntBuscarFicha.setTitle("Buscar Ficha");
+        jIntBuscarFicha.setVerifyInputWhenFocusTarget(false);
         jIntBuscarFicha.setVisible(false);
         jIntBuscarFicha.addAncestorListener(new javax.swing.event.AncestorListener() {
             public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
@@ -587,63 +725,33 @@ public class HomeMedicoVeterinario extends javax.swing.JFrame {
             }
         });
 
+        jPBuscFicha.setBackground(new java.awt.Color(153, 153, 153));
+
+        jLabel18.setBackground(javax.swing.UIManager.getDefaults().getColor("Button.light"));
+        jLabel18.setForeground(new java.awt.Color(47, 92, 212));
         jLabel18.setText("Rut Dueño Mascota");
 
-        jTextField12.addActionListener(new java.awt.event.ActionListener() {
+        jTxtRutProp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField12ActionPerformed(evt);
+                jTxtRutPropActionPerformed(evt);
             }
         });
 
-        jSeparator3.setBackground(new java.awt.Color(0, 0, 0));
+        jSeparator3.setBackground(new java.awt.Color(255, 255, 255));
+        jSeparator3.setForeground(new java.awt.Color(255, 255, 255));
 
-        jButton4.setText("Buscar");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        jBtnBuscarMasc.setText("Buscar");
+        jBtnBuscarMasc.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                jBtnBuscarMascActionPerformed(evt);
             }
         });
 
-        jLabel20.setText("Nombre Mascota");
-
-        jLabel21.setText("Fecha de Nacimiento");
-
+        jLabel22.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        jLabel22.setForeground(new java.awt.Color(43, 90, 212));
         jLabel22.setText("        INFORMACIÓN MASCOTA");
 
-        jLabel23.setText("Sexo");
-
-        jLabel24.setText("Edad");
-
-        jLabel25.setText("Raza");
-
-        jTextField15.setBackground(new java.awt.Color(204, 204, 204));
-        jTextField15.setEditable(false);
-
-        jTextField16.setBackground(new java.awt.Color(204, 204, 204));
-        jTextField16.setEditable(false);
-        jTextField16.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField16ActionPerformed(evt);
-            }
-        });
-
-        jTextField17.setBackground(new java.awt.Color(204, 204, 204));
-        jTextField17.setEditable(false);
-        jTextField17.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField17ActionPerformed(evt);
-            }
-        });
-
-        jTextField18.setBackground(new java.awt.Color(204, 204, 204));
-        jTextField18.setEditable(false);
-
-        jTextField19.setBackground(new java.awt.Color(204, 204, 204));
-        jTextField19.setEditable(false);
-
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        jBtnModificarFicha.setText("Modificar Ficha");
+        jBtnModificarFicha.setText("Historial Clínico");
         jBtnModificarFicha.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jBtnModificarFichaActionPerformed(evt);
@@ -657,409 +765,717 @@ public class HomeMedicoVeterinario extends javax.swing.JFrame {
             }
         });
 
-        org.jdesktop.layout.GroupLayout jPanel2Layout = new org.jdesktop.layout.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel2Layout.createSequentialGroup()
-                .add(64, 64, 64)
-                .add(jLabel18, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 134, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                .add(jTextField12, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 145, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(jButton4)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 141, Short.MAX_VALUE)
-                .add(jComboBox2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 134, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(41, 41, 41))
-            .add(jPanel2Layout.createSequentialGroup()
-                .add(64, 64, 64)
-                .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(jPanel2Layout.createSequentialGroup()
-                        .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(jLabel21)
-                            .add(jLabel20)
-                            .add(jLabel24)
-                            .add(jLabel25)
-                            .add(jLabel23))
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                        .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(jTextField17, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 47, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(jTextField15, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 175, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
-                                .add(org.jdesktop.layout.GroupLayout.LEADING, jTextField19)
-                                .add(org.jdesktop.layout.GroupLayout.LEADING, jTextField18)
-                                .add(org.jdesktop.layout.GroupLayout.LEADING, jTextField16, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 109, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))))
-                    .add(jPanel2Layout.createSequentialGroup()
-                        .add(29, 29, 29)
-                        .add(jLabel22, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 247, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel2Layout.createSequentialGroup()
-                .add(119, 119, 119)
+        jLabel19.setFont(new java.awt.Font("Arial Black", 0, 24)); // NOI18N
+        jLabel19.setForeground(new java.awt.Color(45, 91, 210));
+        jLabel19.setText("  BUSCAR FICHA CLINICA DE LA MASCOTA ");
+
+        jTblMascotas.setModel(dtmDatosListarMascotas);
+        jScrollPane10.setViewportView(jTblMascotas);
+
+        jBtnLimpiarTbl.setText("Limpiar");
+        jBtnLimpiarTbl.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBtnLimpiarTblActionPerformed(evt);
+            }
+        });
+
+        org.jdesktop.layout.GroupLayout jPBuscFichaLayout = new org.jdesktop.layout.GroupLayout(jPBuscFicha);
+        jPBuscFicha.setLayout(jPBuscFichaLayout);
+        jPBuscFichaLayout.setHorizontalGroup(
+            jPBuscFichaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, jPBuscFichaLayout.createSequentialGroup()
+                .add(97, 97, 97)
                 .add(jButton6)
+                .add(257, 257, 257)
+                .add(jBtnLimpiarTbl)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .add(jBtnModificarFicha)
-                .add(133, 133, 133))
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .add(jSeparator3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 715, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(18, 18, 18))
+                .add(jBtnModificarFicha, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 126, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(132, 132, 132))
+            .add(jPBuscFichaLayout.createSequentialGroup()
+                .addContainerGap()
+                .add(jScrollPane10)
+                .addContainerGap())
+            .add(jPBuscFichaLayout.createSequentialGroup()
+                .add(jPBuscFichaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jPBuscFichaLayout.createSequentialGroup()
+                        .add(72, 72, 72)
+                        .add(jSeparator3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 828, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(jPBuscFichaLayout.createSequentialGroup()
+                        .add(161, 161, 161)
+                        .add(jLabel18, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 134, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .add(147, 147, 147)
+                        .add(jTxtRutProp, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 145, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .add(186, 186, 186)
+                        .add(jBtnBuscarMasc))
+                    .add(jPBuscFichaLayout.createSequentialGroup()
+                        .add(371, 371, 371)
+                        .add(jLabel22, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 312, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(jPBuscFichaLayout.createSequentialGroup()
+                        .add(204, 204, 204)
+                        .add(jLabel19, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 598, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(161, Short.MAX_VALUE))
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel2Layout.createSequentialGroup()
-                .add(17, 17, 17)
-                .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jLabel18)
-                    .add(jTextField12, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(jButton4)
-                    .add(jComboBox2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+        jPBuscFichaLayout.setVerticalGroup(
+            jPBuscFichaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jPBuscFichaLayout.createSequentialGroup()
+                .add(20, 20, 20)
+                .add(jLabel19, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 47, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .add(18, 18, 18)
                 .add(jSeparator3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 10, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(14, 14, 14)
-                .add(jLabel22)
-                .add(44, 44, 44)
-                .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jLabel20)
-                    .add(jTextField15, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .add(27, 27, 27)
-                .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jLabel21)
-                    .add(jTextField16, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .add(26, 26, 26)
-                .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jLabel24)
-                    .add(jTextField17, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .add(18, 18, 18)
-                .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(jLabel25)
-                    .add(jTextField18, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .add(21, 21, 21)
-                .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jLabel23)
-                    .add(jTextField19, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 57, Short.MAX_VALUE)
-                .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jBtnModificarFicha)
-                    .add(jButton6))
-                .add(54, 54, 54))
+                .add(jPBuscFichaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(jLabel18)
+                    .add(jTxtRutProp, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(jBtnBuscarMasc, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 37, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .add(46, 46, 46)
+                .add(jLabel22)
+                .add(18, 18, 18)
+                .add(jScrollPane10, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 255, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(28, 28, 28)
+                .add(jPBuscFichaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
+                    .add(jBtnModificarFicha, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .add(jPBuscFichaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                        .add(jBtnLimpiarTbl, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .add(jButton6, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap(48, Short.MAX_VALUE))
         );
-
-        jLabel19.setFont(new java.awt.Font("Apple Braille", 0, 24)); // NOI18N
-        jLabel19.setForeground(new java.awt.Color(0, 102, 102));
-        jLabel19.setText("BUSCAR FICHA CLINICA DE LA MASCOTA ");
 
         org.jdesktop.layout.GroupLayout jIntBuscarFichaLayout = new org.jdesktop.layout.GroupLayout(jIntBuscarFicha.getContentPane());
         jIntBuscarFicha.getContentPane().setLayout(jIntBuscarFichaLayout);
         jIntBuscarFichaLayout.setHorizontalGroup(
             jIntBuscarFichaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jIntBuscarFichaLayout.createSequentialGroup()
-                .add(70, 70, 70)
-                .add(jPanel2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(56, Short.MAX_VALUE))
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, jIntBuscarFichaLayout.createSequentialGroup()
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .add(jLabel19, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 520, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(161, 161, 161))
+            .add(jPBuscFicha, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jIntBuscarFichaLayout.setVerticalGroup(
             jIntBuscarFichaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jIntBuscarFichaLayout.createSequentialGroup()
-                .add(10, 10, 10)
-                .add(jLabel19, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 47, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(18, 18, 18)
-                .add(jPanel2, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .add(jPBuscFicha, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        jIntBuscarFicha.setBounds(0, 0, 912, 642);
+        jIntBuscarFicha.setBounds(0, 0, 1085, 642);
         jDesktopPane1.add(jIntBuscarFicha, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jIntBuscarFicha.getAccessibleContext().setAccessibleParent(jIntBuscarFicha);
 
+        jIntModificarFicha.setBackground(new java.awt.Color(153, 153, 153));
         jIntModificarFicha.setClosable(true);
         jIntModificarFicha.setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
+        jIntModificarFicha.setForeground(new java.awt.Color(153, 153, 153));
         jIntModificarFicha.setIconifiable(true);
         jIntModificarFicha.setMaximizable(true);
         jIntModificarFicha.setResizable(true);
         jIntModificarFicha.setTitle("Modificar Ficha");
-        jIntModificarFicha.setMinimumSize(new java.awt.Dimension(150, 90));
-        jIntModificarFicha.setPreferredSize(new java.awt.Dimension(700, 478));
+        jIntModificarFicha.setMinimumSize(new java.awt.Dimension(0, 0));
+        jIntModificarFicha.setPreferredSize(new java.awt.Dimension(1280, 678));
         jIntModificarFicha.setVisible(false);
 
-        jLabel1.setText("Diagnostico");
+        jPModificarHistorial.setBackground(new java.awt.Color(153, 153, 153));
+        jPModificarHistorial.setForeground(new java.awt.Color(204, 204, 204));
+        jPModificarHistorial.setMaximumSize(new java.awt.Dimension(2147483647, 2147483647));
+        jPModificarHistorial.setPreferredSize(new java.awt.Dimension(1280, 678));
+        jPModificarHistorial.setSize(new java.awt.Dimension(1280, 678));
 
-        jLabel2.setText("Medicamentos");
+        jLabel36.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        jLabel36.setForeground(new java.awt.Color(45, 91, 210));
+        jLabel36.setText("\"MASCOTA\"");
 
-        jButton2.setText("Aceptar ");
+        jLabel23.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        jLabel23.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel23.setText("Fecha ");
 
-        jButton3.setText("Cancelar");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        jLabel21.setForeground(new java.awt.Color(255, 255, 255));
+
+        jSeparator4.setBackground(new java.awt.Color(45, 91, 210));
+        jSeparator4.setForeground(new java.awt.Color(45, 91, 210));
+        jSeparator4.setBounds(new java.awt.Rectangle(70, 120, 1030, 12));
+
+        TxtMedicamentos.setColumns(20);
+        TxtMedicamentos.setRows(5);
+        jScrollPane2.setViewportView(TxtMedicamentos);
+
+        TxtDiagnostico.setColumns(20);
+        TxtDiagnostico.setRows(5);
+        jScrollPane1.setViewportView(TxtDiagnostico);
+
+        jLabel26.setFont(new java.awt.Font("News Gothic MT", 1, 24)); // NOI18N
+        jLabel26.setForeground(new java.awt.Color(45, 91, 210));
+        jLabel26.setText("                 HISTORIAL  CLÍNICO     ");
+
+        jBtnHistCli.setBackground(new java.awt.Color(45, 91, 210));
+        jBtnHistCli.setForeground(new java.awt.Color(255, 255, 255));
+        jBtnHistCli.setText("Aceptar");
+        jBtnHistCli.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                jBtnHistCliActionPerformed(evt);
             }
         });
 
-        jLabel26.setFont(new java.awt.Font("News Gothic MT", 1, 24)); // NOI18N
-        jLabel26.setForeground(new java.awt.Color(0, 102, 102));
-        jLabel26.setText("                 HISTORIAL  CLÍNICO     ");
+        jButton2.setBackground(new java.awt.Color(45, 91, 210));
+        jButton2.setForeground(new java.awt.Color(255, 255, 255));
+        jButton2.setText("Cancelar");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel2.setText("Medicamentos");
 
-        jTextArea2.setColumns(20);
-        jTextArea2.setRows(5);
-        jScrollPane2.setViewportView(jTextArea2);
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setText("Pre- Diagnostico      :");
 
-        jLabel36.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        jLabel36.setForeground(new java.awt.Color(0, 102, 102));
-        jLabel36.setText("\"MASCOTA\"");
+        jLabel24.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel24.setForeground(new java.awt.Color(255, 255, 255));
+
+        jSeparator16.setBackground(new java.awt.Color(45, 91, 210));
+        jSeparator16.setForeground(new java.awt.Color(45, 91, 210));
+
+        TxtFechaHisCli.setBackground(new java.awt.Color(153, 153, 153));
+        TxtFechaHisCli.setEditable(false);
+        TxtFechaHisCli.setForeground(new java.awt.Color(255, 255, 255));
+        TxtFechaHisCli.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TxtFechaHisCliActionPerformed(evt);
+            }
+        });
+
+        jLabel32.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel32.setText("Hallazgos al Examen Clínico : ");
+
+        jLabel38.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel38.setText("Exámenes Solicitados y resultados  :");
+
+        TxtExamenesSolicitados.setColumns(20);
+        TxtExamenesSolicitados.setRows(5);
+        jScrollPane4.setViewportView(TxtExamenesSolicitados);
+
+        jLabel71.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel71.setText("Tratamiento ( Fármaco, Dosis, Ritmo, Horario, Diración   :");
+
+        txtTratamiento.setColumns(20);
+        txtTratamiento.setRows(5);
+        jScrollPane11.setViewportView(txtTratamiento);
+
+        jLabel72.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel72.setText("Indicación");
+
+        CmbVacunaAdm.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Ninguna", "R", "Par", "Séxt/Óct", "Leu", "Triple" }));
+
+        jLabel73.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel73.setText("Fecha Próxima Vacuna");
+
+        jLabel74.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel74.setText("Fecha Próxima Desparasitación");
+
+        TxtFechaDesp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TxtFechaDespActionPerformed(evt);
+            }
+        });
+
+        jLabel75.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel75.setText("Próximo Control");
+
+        TxtHallazgoClinico.setColumns(20);
+        TxtHallazgoClinico.setRows(5);
+        jScrollPane3.setViewportView(TxtHallazgoClinico);
+
+        CmbIndicacion.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Ninguna", "Reposos Estricto", "Reposo Relativo", "Curaciones" }));
+
+        jLabel76.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel76.setText("Vacuna Administrada");
+
+        jLabel77.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel77.setText("Fecha");
+
+        jLabel78.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel78.setText("Hora");
+
+        jLabel79.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel79.setText("Desparasitación");
+
+        CmbDesp.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Ninguna", "Interna", "Externa" }));
+        CmbDesp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CmbDespActionPerformed(evt);
+            }
+        });
+
+        org.jdesktop.layout.GroupLayout jPModificarHistorialLayout = new org.jdesktop.layout.GroupLayout(jPModificarHistorial);
+        jPModificarHistorial.setLayout(jPModificarHistorialLayout);
+        jPModificarHistorialLayout.setHorizontalGroup(
+            jPModificarHistorialLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jPModificarHistorialLayout.createSequentialGroup()
+                .add(25, 25, 25)
+                .add(jPModificarHistorialLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jPModificarHistorialLayout.createSequentialGroup()
+                        .add(jPModificarHistorialLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(jPModificarHistorialLayout.createSequentialGroup()
+                                .add(541, 541, 541)
+                                .add(TxtFechaHisCli, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 96, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                            .add(jPModificarHistorialLayout.createSequentialGroup()
+                                .add(558, 558, 558)
+                                .add(jLabel23))
+                            .add(jPModificarHistorialLayout.createSequentialGroup()
+                                .add(521, 521, 521)
+                                .add(jLabel36))
+                            .add(jPModificarHistorialLayout.createSequentialGroup()
+                                .add(314, 314, 314)
+                                .add(jLabel26)))
+                        .addContainerGap())
+                    .add(jPModificarHistorialLayout.createSequentialGroup()
+                        .add(90, 90, 90)
+                        .add(jLabel71)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .add(jLabel2)
+                        .add(230, 230, 230))))
+            .add(jPModificarHistorialLayout.createSequentialGroup()
+                .add(128, 128, 128)
+                .add(jLabel32)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .add(jLabel1)
+                .add(206, 206, 206)
+                .add(jLabel38)
+                .add(111, 111, 111))
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, jPModificarHistorialLayout.createSequentialGroup()
+                .add(jPModificarHistorialLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                    .add(jPModificarHistorialLayout.createSequentialGroup()
+                        .add(jPModificarHistorialLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(jPModificarHistorialLayout.createSequentialGroup()
+                                .add(188, 188, 188)
+                                .add(jPModificarHistorialLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                                    .add(jPModificarHistorialLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                                        .add(org.jdesktop.layout.GroupLayout.LEADING, jLabel21)
+                                        .add(jLabel24))
+                                    .add(jLabel21)))
+                            .add(jPModificarHistorialLayout.createSequentialGroup()
+                                .add(jPModificarHistorialLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                                    .add(jPModificarHistorialLayout.createSequentialGroup()
+                                        .add(21, 21, 21)
+                                        .add(CmbIndicacion, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 181, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                                    .add(jPModificarHistorialLayout.createSequentialGroup()
+                                        .add(71, 71, 71)
+                                        .add(jLabel72, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 92, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+                                .add(18, 18, 18)
+                                .add(jPModificarHistorialLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                                    .add(jPModificarHistorialLayout.createSequentialGroup()
+                                        .add(jLabel79)
+                                        .add(61, 61, 61)
+                                        .add(jLabel76))
+                                    .add(jPModificarHistorialLayout.createSequentialGroup()
+                                        .add(CmbDesp, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                                        .add(40, 40, 40)
+                                        .add(CmbVacunaAdm, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 157, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))))
+                        .add(50, 50, 50)
+                        .add(jPModificarHistorialLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(jLabel73)
+                            .add(TxtFechaVacuna, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 126, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                        .add(78, 78, 78)
+                        .add(jPModificarHistorialLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                            .add(jPModificarHistorialLayout.createSequentialGroup()
+                                .add(TxtFechaControl, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 92, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                                .add(49, 49, 49)
+                                .add(TxtHoraControl, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 65, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                            .add(jPModificarHistorialLayout.createSequentialGroup()
+                                .add(TxtFechaDesp, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 127, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                                .add(115, 115, 115)
+                                .add(jPModificarHistorialLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                                    .add(org.jdesktop.layout.GroupLayout.TRAILING, jPModificarHistorialLayout.createSequentialGroup()
+                                        .add(jLabel77)
+                                        .add(86, 86, 86)
+                                        .add(jLabel78)
+                                        .add(27, 27, 27))
+                                    .add(org.jdesktop.layout.GroupLayout.TRAILING, jPModificarHistorialLayout.createSequentialGroup()
+                                        .add(jLabel75, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 112, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                                        .add(45, 45, 45)))))
+                        .add(18, 18, 18))
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, jPModificarHistorialLayout.createSequentialGroup()
+                        .add(43, 43, 43)
+                        .add(jPModificarHistorialLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(org.jdesktop.layout.GroupLayout.TRAILING, jSeparator16)
+                            .add(jPModificarHistorialLayout.createSequentialGroup()
+                                .add(jScrollPane3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 354, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .add(jScrollPane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 277, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                                .add(80, 80, 80)
+                                .add(jScrollPane4, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 352, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))))
+                    .add(jPModificarHistorialLayout.createSequentialGroup()
+                        .add(42, 42, 42)
+                        .add(jScrollPane11, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 493, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .add(jPModificarHistorialLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(jLabel74)
+                            .add(jScrollPane2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 470, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))))
+                .add(40, 40, 40))
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, jPModificarHistorialLayout.createSequentialGroup()
+                .addContainerGap()
+                .add(jSeparator4)
+                .addContainerGap())
+            .add(jPModificarHistorialLayout.createSequentialGroup()
+                .add(36, 36, 36)
+                .add(jButton2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 111, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .add(jBtnHistCli, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 104, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(86, 86, 86))
+        );
+        jPModificarHistorialLayout.setVerticalGroup(
+            jPModificarHistorialLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jPModificarHistorialLayout.createSequentialGroup()
+                .addContainerGap()
+                .add(jLabel26)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(jLabel36)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(jSeparator4, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 12, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(jLabel23)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(TxtFechaHisCli, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(jSeparator16, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 12, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(18, 18, 18)
+                .add(jPModificarHistorialLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(jLabel32, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 26, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(jLabel1)
+                    .add(jLabel38))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(jPModificarHistorialLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jPModificarHistorialLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
+                        .add(jScrollPane1)
+                        .add(jScrollPane4))
+                    .add(jScrollPane3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .add(11, 11, 11)
+                .add(jLabel21)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                .add(jPModificarHistorialLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(jLabel71)
+                    .add(jLabel2))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                .add(jPModificarHistorialLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
+                    .add(jScrollPane2, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 63, Short.MAX_VALUE)
+                    .add(jScrollPane11, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .add(21, 21, 21)
+                .add(jPModificarHistorialLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                    .add(jPModificarHistorialLayout.createSequentialGroup()
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 5, Short.MAX_VALUE)
+                        .add(jPModificarHistorialLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                            .add(jLabel72)
+                            .add(jLabel79)
+                            .add(jLabel76)
+                            .add(jLabel73)
+                            .add(jLabel74, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 28, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                        .add(18, 18, 18)
+                        .add(jPModificarHistorialLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                            .add(CmbIndicacion, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(CmbDesp, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(CmbVacunaAdm, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(TxtFechaVacuna, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(TxtFechaDesp, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                        .add(121, 121, 121))
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, jPModificarHistorialLayout.createSequentialGroup()
+                        .add(jPModificarHistorialLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                            .add(jPModificarHistorialLayout.createSequentialGroup()
+                                .add(jPModificarHistorialLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                                    .add(org.jdesktop.layout.GroupLayout.LEADING, jPModificarHistorialLayout.createSequentialGroup()
+                                        .add(116, 116, 116)
+                                        .add(jLabel24))
+                                    .add(org.jdesktop.layout.GroupLayout.LEADING, jPModificarHistorialLayout.createSequentialGroup()
+                                        .add(36, 36, 36)
+                                        .add(jLabel75, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 28, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                                        .add(jPModificarHistorialLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                                            .add(jLabel77)
+                                            .add(jLabel78))
+                                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                                        .add(jPModificarHistorialLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                                            .add(TxtHoraControl, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                                            .add(TxtFechaControl, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))))
+                                .add(18, 18, 18)
+                                .add(jBtnHistCli, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 38, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                            .add(jButton2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 38, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap())))
+        );
 
         org.jdesktop.layout.GroupLayout jIntModificarFichaLayout = new org.jdesktop.layout.GroupLayout(jIntModificarFicha.getContentPane());
         jIntModificarFicha.getContentPane().setLayout(jIntModificarFichaLayout);
         jIntModificarFichaLayout.setHorizontalGroup(
             jIntModificarFichaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(jIntModificarFichaLayout.createSequentialGroup()
-                .add(jIntModificarFichaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(jIntModificarFichaLayout.createSequentialGroup()
-                        .add(57, 57, 57)
-                        .add(jIntModificarFichaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(jLabel2)
-                            .add(jLabel1))
-                        .add(57, 57, 57)
-                        .add(jIntModificarFichaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(jScrollPane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 416, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(jScrollPane2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 264, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
-                    .add(jIntModificarFichaLayout.createSequentialGroup()
-                        .add(17, 17, 17)
-                        .add(jSeparator4, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 634, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                    .add(jIntModificarFichaLayout.createSequentialGroup()
-                        .add(65, 65, 65)
-                        .add(jIntModificarFichaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(jLabel26)
-                            .add(jIntModificarFichaLayout.createSequentialGroup()
-                                .add(224, 224, 224)
-                                .add(jLabel36)))))
-                .addContainerGap(25, Short.MAX_VALUE))
-            .add(jIntModificarFichaLayout.createSequentialGroup()
-                .add(127, 127, 127)
-                .add(jButton2)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .add(jButton3)
-                .add(128, 128, 128))
+                .addContainerGap()
+                .add(jPModificarHistorial, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 1273, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jIntModificarFichaLayout.setVerticalGroup(
             jIntModificarFichaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jIntModificarFichaLayout.createSequentialGroup()
-                .addContainerGap(27, Short.MAX_VALUE)
-                .add(jLabel26)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                .add(jLabel36)
-                .add(18, 18, 18)
-                .add(jSeparator4, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(48, 48, 48)
-                .add(jIntModificarFichaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(org.jdesktop.layout.GroupLayout.TRAILING, jIntModificarFichaLayout.createSequentialGroup()
-                        .add(jScrollPane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 51, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                        .add(50, 50, 50))
-                    .add(org.jdesktop.layout.GroupLayout.TRAILING, jIntModificarFichaLayout.createSequentialGroup()
-                        .add(jLabel1)
-                        .add(71, 71, 71)))
-                .add(jIntModificarFichaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(org.jdesktop.layout.GroupLayout.TRAILING, jIntModificarFichaLayout.createSequentialGroup()
-                        .add(jLabel2)
-                        .add(81, 81, 81))
-                    .add(org.jdesktop.layout.GroupLayout.TRAILING, jIntModificarFichaLayout.createSequentialGroup()
-                        .add(jScrollPane2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 46, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                        .add(69, 69, 69)))
-                .add(jIntModificarFichaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jButton2)
-                    .add(jButton3))
-                .add(18, 18, 18))
+            .add(jPModificarHistorial, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 632, Short.MAX_VALUE)
         );
 
-        jIntModificarFicha.setBounds(0, 0, 700, 478);
+        jIntModificarFicha.setBounds(0, 0, 1280, 678);
         jDesktopPane1.add(jIntModificarFicha, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
+        jIntGenerarReceta.setBackground(new java.awt.Color(153, 153, 153));
         jIntGenerarReceta.setClosable(true);
         jIntGenerarReceta.setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
         jIntGenerarReceta.setIconifiable(true);
         jIntGenerarReceta.setMaximizable(true);
         jIntGenerarReceta.setResizable(true);
         jIntGenerarReceta.setTitle("Generar Receta Médica ");
+        jIntGenerarReceta.setBounds(new java.awt.Rectangle(0, 0, 800, 691));
         jIntGenerarReceta.setMinimumSize(new java.awt.Dimension(0, 0));
-        jIntGenerarReceta.setNormalBounds(new java.awt.Rectangle(0, 0, 912, 642));
         jIntGenerarReceta.setPreferredSize(new java.awt.Dimension(800, 691));
+        jIntGenerarReceta.setVerifyInputWhenFocusTarget(false);
         jIntGenerarReceta.setVisible(false);
 
-        jLabel27.setText("Rut Médico");
+        jPGenerarReceta.setBackground(new java.awt.Color(153, 153, 153));
+        jPGenerarReceta.setPreferredSize(new java.awt.Dimension(900, 700));
+        jPGenerarReceta.setSize(new java.awt.Dimension(900, 700));
 
-        jLabel28.setText("Nombres Apellidos");
-
-        jLabel29.setFont(new java.awt.Font("Apple Braille", 1, 24)); // NOI18N
-        jLabel29.setForeground(new java.awt.Color(0, 102, 102));
-        jLabel29.setText("RECETA MEDICA");
-
-        jLabel30.setText("Fecha Emisión");
-
-        jTextField20.addActionListener(new java.awt.event.ActionListener() {
+        btnCancelar.setText("Cancelar");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField20ActionPerformed(evt);
+                btnCancelarActionPerformed(evt);
             }
         });
 
-        jLabel31.setText("Medicamentos");
-
-        jLabel32.setText("Dosis Medicamento");
-
-        jLabel33.setText("Transcripcion");
-
-        jTextArea3.setColumns(20);
-        jTextArea3.setRows(5);
-        jScrollPane3.setViewportView(jTextArea3);
-
-        jTextArea4.setColumns(20);
-        jTextArea4.setRows(5);
-        jScrollPane4.setViewportView(jTextArea4);
-
-        jTextArea5.setColumns(20);
-        jTextArea5.setRows(5);
-        jScrollPane5.setViewportView(jTextArea5);
-
-        jButton5.setText("Generar Receta");
-
-        jButton7.setText("Cancelar");
-        jButton7.addActionListener(new java.awt.event.ActionListener() {
+        btnGenerar.setText("Generar");
+        btnGenerar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton7ActionPerformed(evt);
+                btnGenerarActionPerformed(evt);
             }
         });
 
-        jTextField22.setBackground(new java.awt.Color(153, 153, 153));
-        jTextField22.setEditable(false);
-        jTextField22.setForeground(new java.awt.Color(204, 204, 204));
-        jTextField22.setSelectedTextColor(new java.awt.Color(0, 102, 102));
-        jTextField22.setSelectionColor(new java.awt.Color(204, 204, 204));
-        jTextField22.addActionListener(new java.awt.event.ActionListener() {
+        TxtRp.setColumns(20);
+        TxtRp.setRows(5);
+        jScrollPane5.setViewportView(TxtRp);
+
+        jLabel33.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel33.setText("R.P");
+
+        jSeparator5.setBackground(new java.awt.Color(255, 255, 255));
+        jSeparator5.setForeground(new java.awt.Color(255, 255, 255));
+
+        TxtRutProp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField22ActionPerformed(evt);
+                TxtRutPropActionPerformed(evt);
             }
         });
 
-        jLabel38.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
-        jLabel38.setForeground(new java.awt.Color(0, 102, 102));
-        jLabel38.setText("Folio");
+        LbRut.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        LbRut.setForeground(new java.awt.Color(255, 255, 255));
+        LbRut.setText("Rut Propietario");
+
+        jLabel27.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel27.setText("Especie");
+
+        txtEspecie.setBackground(new java.awt.Color(204, 204, 204));
+        txtEspecie.setEditable(false);
+
+        jLabel28.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel28.setText("Raza");
+
+        jLabel29.setFont(new java.awt.Font("Arial Black", 1, 36)); // NOI18N
+        jLabel29.setForeground(new java.awt.Color(45, 91, 210));
+        jLabel29.setText("RECETA GENERAL");
+
+        txtEdadMasc.setBackground(new java.awt.Color(204, 204, 204));
+        txtEdadMasc.setEditable(false);
+
+        jLabel25.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel25.setText("Sexo");
+
+        jLabel31.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel31.setText("Edad");
+
+        CbMascotaAcosiada.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CbMascotaAcosiadaActionPerformed(evt);
+            }
+        });
+
+        BtnBuscarMasc.setText("Buscar");
+        BtnBuscarMasc.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnBuscarMascActionPerformed(evt);
+            }
+        });
+
+        jLabel80.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel80.setText("Mascotas Asociadas");
+
+        txtSexo.setBackground(new java.awt.Color(204, 204, 204));
+        txtSexo.setEditable(false);
+
+        jTextRazaMascota.setBackground(new java.awt.Color(204, 204, 204));
+        jTextRazaMascota.setEditable(false);
+
+        txtFechaCreacion.setBackground(new java.awt.Color(204, 204, 204));
+        txtFechaCreacion.setEditable(false);
+        txtFechaCreacion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtFechaCreacionActionPerformed(evt);
+            }
+        });
+
+        jLabel30.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel30.setText("Fecha  Emisión");
+
+        jLabel81.setText(" Juan Pablo  Sanchez ");
+
+        jLabel82.setText("16.334.234-6");
+
+        jLabel83.setForeground(new java.awt.Color(45, 91, 210));
+        jLabel83.setText("MÉDICO");
+
+        org.jdesktop.layout.GroupLayout jPGenerarRecetaLayout = new org.jdesktop.layout.GroupLayout(jPGenerarReceta);
+        jPGenerarReceta.setLayout(jPGenerarRecetaLayout);
+        jPGenerarRecetaLayout.setHorizontalGroup(
+            jPGenerarRecetaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jPGenerarRecetaLayout.createSequentialGroup()
+                .add(25, 25, 25)
+                .add(btnCancelar)
+                .add(190, 190, 190)
+                .add(jPGenerarRecetaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jPGenerarRecetaLayout.createSequentialGroup()
+                        .add(jPGenerarRecetaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(jLabel81, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 146, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(jPGenerarRecetaLayout.createSequentialGroup()
+                                .add(20, 20, 20)
+                                .add(jLabel82)))
+                        .addContainerGap())
+                    .add(jPGenerarRecetaLayout.createSequentialGroup()
+                        .add(41, 41, 41)
+                        .add(jLabel83)
+                        .addContainerGap())))
+            .add(jPGenerarRecetaLayout.createSequentialGroup()
+                .add(jPGenerarRecetaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jPGenerarRecetaLayout.createSequentialGroup()
+                        .add(141, 141, 141)
+                        .add(LbRut)
+                        .add(18, 18, 18)
+                        .add(TxtRutProp, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 129, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(BtnBuscarMasc, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 71, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(jPGenerarRecetaLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .add(jSeparator5, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 763, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(jPGenerarRecetaLayout.createSequentialGroup()
+                        .add(476, 476, 476)
+                        .add(jLabel20))
+                    .add(jPGenerarRecetaLayout.createSequentialGroup()
+                        .add(313, 313, 313)
+                        .add(jPGenerarRecetaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                            .add(jLabel30)
+                            .add(txtFechaCreacion, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 98, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))))
+                .add(0, 0, Short.MAX_VALUE))
+            .add(jPGenerarRecetaLayout.createSequentialGroup()
+                .add(jPGenerarRecetaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jPGenerarRecetaLayout.createSequentialGroup()
+                        .add(35, 35, 35)
+                        .add(jPGenerarRecetaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(jPGenerarRecetaLayout.createSequentialGroup()
+                                .add(jLabel25)
+                                .add(40, 40, 40)
+                                .add(txtSexo, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 112, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                                .add(77, 77, 77)
+                                .add(jLabel31)
+                                .add(28, 28, 28)
+                                .add(txtEdadMasc, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 89, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                                .add(100, 100, 100)
+                                .add(jLabel27)
+                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                                .add(txtEspecie, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 113, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                            .add(jPGenerarRecetaLayout.createSequentialGroup()
+                                .add(jLabel80)
+                                .add(24, 24, 24)
+                                .add(jPGenerarRecetaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                                    .add(jPGenerarRecetaLayout.createSequentialGroup()
+                                        .add(CbMascotaAcosiada, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 132, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                                        .add(87, 87, 87)
+                                        .add(jLabel28)
+                                        .add(18, 18, 18)
+                                        .add(jTextRazaMascota, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 196, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                                    .add(jLabel29, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 393, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))))
+                    .add(jPGenerarRecetaLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .add(jPGenerarRecetaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                            .add(btnGenerar)
+                            .add(jPGenerarRecetaLayout.createSequentialGroup()
+                                .add(jLabel33)
+                                .add(44, 44, 44)
+                                .add(jScrollPane5, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 637, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap())
+        );
+        jPGenerarRecetaLayout.setVerticalGroup(
+            jPGenerarRecetaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jPGenerarRecetaLayout.createSequentialGroup()
+                .addContainerGap()
+                .add(jLabel29, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 41, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(35, 35, 35)
+                .add(jPGenerarRecetaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(TxtRutProp, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(BtnBuscarMasc)
+                    .add(LbRut))
+                .add(48, 48, 48)
+                .add(jPGenerarRecetaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(CbMascotaAcosiada, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(jLabel80)
+                    .add(jTextRazaMascota, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(jLabel28))
+                .add(18, 18, 18)
+                .add(jPGenerarRecetaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(txtSexo, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(jLabel25)
+                    .add(txtEdadMasc, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(jLabel31)
+                    .add(jLabel27)
+                    .add(txtEspecie, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .add(30, 30, 30)
+                .add(jSeparator5, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 12, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(18, 18, 18)
+                .add(jLabel30)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(txtFechaCreacion, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(41, 41, 41)
+                .add(jPGenerarRecetaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jLabel33)
+                    .add(jScrollPane5, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 133, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .add(9, 9, 9)
+                .add(jPGenerarRecetaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jPGenerarRecetaLayout.createSequentialGroup()
+                        .add(jPGenerarRecetaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(jLabel20)
+                            .add(jPGenerarRecetaLayout.createSequentialGroup()
+                                .add(27, 27, 27)
+                                .add(btnCancelar, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 40, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap())
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, jPGenerarRecetaLayout.createSequentialGroup()
+                        .add(jLabel83)
+                        .add(9, 9, 9)
+                        .add(jLabel81)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(jPGenerarRecetaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(btnGenerar, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 40, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(jLabel82))
+                        .addContainerGap())))
+        );
 
         org.jdesktop.layout.GroupLayout jIntGenerarRecetaLayout = new org.jdesktop.layout.GroupLayout(jIntGenerarReceta.getContentPane());
         jIntGenerarReceta.getContentPane().setLayout(jIntGenerarRecetaLayout);
         jIntGenerarRecetaLayout.setHorizontalGroup(
             jIntGenerarRecetaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jIntGenerarRecetaLayout.createSequentialGroup()
-                .add(131, 131, 131)
-                .add(jIntGenerarRecetaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(jIntGenerarRecetaLayout.createSequentialGroup()
-                        .add(jButton7)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .add(jButton5)
-                        .add(127, 127, 127))
-                    .add(jIntGenerarRecetaLayout.createSequentialGroup()
-                        .add(jIntGenerarRecetaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(org.jdesktop.layout.GroupLayout.TRAILING, jIntGenerarRecetaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                                .add(jScrollPane4, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 350, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                .add(jScrollPane5, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 350, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                .add(jScrollPane3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 359, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                            .add(jIntGenerarRecetaLayout.createSequentialGroup()
-                                .add(jIntGenerarRecetaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                                    .add(jLabel32)
-                                    .add(jLabel31)
-                                    .add(jLabel33))
-                                .add(431, 431, 431)))
-                        .add(0, 90, Short.MAX_VALUE))))
             .add(org.jdesktop.layout.GroupLayout.TRAILING, jIntGenerarRecetaLayout.createSequentialGroup()
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .add(jLabel29, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 235, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(282, 282, 282))
-            .add(jIntGenerarRecetaLayout.createSequentialGroup()
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .add(jIntGenerarRecetaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(jIntGenerarRecetaLayout.createSequentialGroup()
-                        .add(jIntGenerarRecetaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(jLabel28)
-                            .add(jLabel27))
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(jIntGenerarRecetaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(jIntGenerarRecetaLayout.createSequentialGroup()
-                                .add(jTextField13, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 113, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .add(jLabel38)
-                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                                .add(jTextField22, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 158, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                .add(113, 113, 113))
-                            .add(jIntGenerarRecetaLayout.createSequentialGroup()
-                                .add(jTextField14, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 156, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap())))
-                    .add(jIntGenerarRecetaLayout.createSequentialGroup()
-                        .add(jIntGenerarRecetaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(jSeparator5, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 673, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(jIntGenerarRecetaLayout.createSequentialGroup()
-                                .add(jLabel30)
-                                .add(36, 36, 36)
-                                .add(jTextField20, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 109, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
-                        .add(0, 0, Short.MAX_VALUE))))
+                .addContainerGap()
+                .add(jPGenerarReceta, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 769, Short.MAX_VALUE)
+                .addContainerGap())
         );
         jIntGenerarRecetaLayout.setVerticalGroup(
             jIntGenerarRecetaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(jIntGenerarRecetaLayout.createSequentialGroup()
-                .add(26, 26, 26)
-                .add(jLabel29, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 41, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(jIntGenerarRecetaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(org.jdesktop.layout.GroupLayout.TRAILING, jIntGenerarRecetaLayout.createSequentialGroup()
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .add(jIntGenerarRecetaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                            .add(jTextField20, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(jLabel30))
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                        .add(jIntGenerarRecetaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                            .add(jTextField13, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(jLabel27))
-                        .add(18, 18, 18))
-                    .add(jIntGenerarRecetaLayout.createSequentialGroup()
-                        .add(41, 41, 41)
-                        .add(jIntGenerarRecetaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                            .add(jTextField22, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 55, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(jLabel38))
-                        .add(21, 21, 21)))
-                .add(jIntGenerarRecetaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jLabel28)
-                    .add(jTextField14, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .add(12, 12, 12)
-                .add(jSeparator5, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 13, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(18, 18, 18)
-                .add(jIntGenerarRecetaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(jScrollPane3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 53, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(jIntGenerarRecetaLayout.createSequentialGroup()
-                        .add(25, 25, 25)
-                        .add(jLabel31)))
-                .add(jIntGenerarRecetaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(jIntGenerarRecetaLayout.createSequentialGroup()
-                        .add(55, 55, 55)
-                        .add(jLabel32))
-                    .add(jIntGenerarRecetaLayout.createSequentialGroup()
-                        .add(45, 45, 45)
-                        .add(jScrollPane4, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 58, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
-                .add(jIntGenerarRecetaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(jIntGenerarRecetaLayout.createSequentialGroup()
-                        .add(50, 50, 50)
-                        .add(jLabel33))
-                    .add(jIntGenerarRecetaLayout.createSequentialGroup()
-                        .add(39, 39, 39)
-                        .add(jScrollPane5, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 57, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
-                .add(79, 79, 79)
-                .add(jIntGenerarRecetaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jButton7, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 40, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(jButton5, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 40, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .add(33, 33, 33))
+                .addContainerGap()
+                .add(jPGenerarReceta, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 633, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
-        jIntGenerarReceta.setBounds(80, 20, 800, 691);
+        jIntGenerarReceta.setBounds(0, 0, 800, 691);
         jDesktopPane1.add(jIntGenerarReceta, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         jIntListarRecetas.setClosable(true);
@@ -1070,23 +1486,25 @@ public class HomeMedicoVeterinario extends javax.swing.JFrame {
         jIntListarRecetas.setTitle("Listar Recetas Médica ");
         jIntListarRecetas.setVisible(false);
 
-        jLab.setText("Fecha Emisión Receta");
+        jPanel1.setBackground(new java.awt.Color(153, 153, 153));
+        jPanel1.setForeground(new java.awt.Color(255, 255, 255));
 
-        jLabel42.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
-        jLabel42.setForeground(new java.awt.Color(0, 102, 102));
-        jLabel42.setText("LISTAR RECETAS MÉDICAS INGRESADAS ");
+        jLabel42.setFont(new java.awt.Font("Arial Black", 1, 36)); // NOI18N
+        jLabel42.setForeground(new java.awt.Color(45, 91, 210));
+        jLabel42.setText("    RECETAS MÉDICAS INGRESADAS ");
+
+        jTablaReceta.setModel(dtmDatosListarRecetas);
+        jScrollPane6.setViewportView(jTablaReceta);
 
         jButton8.setText("Listar");
-
-        jTable1.setModel(dtmDatosListarRecetas);
-        jScrollPane6.setViewportView(jTable1);
-
-        jButton9.setText("Limpiar");
-        jButton9.addActionListener(new java.awt.event.ActionListener() {
+        jButton8.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton9ActionPerformed(evt);
+                jButton8ActionPerformed(evt);
             }
         });
+
+        jLab.setForeground(new java.awt.Color(255, 255, 255));
+        jLab.setText("Fecha Emisión Receta");
 
         jButton10.setText("Cerrar");
         jButton10.addActionListener(new java.awt.event.ActionListener() {
@@ -1095,61 +1513,93 @@ public class HomeMedicoVeterinario extends javax.swing.JFrame {
             }
         });
 
+        jButton9.setText("Limpiar");
+        jButton9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton9ActionPerformed(evt);
+            }
+        });
+
+        jLabel84.setForeground(new java.awt.Color(45, 91, 210));
+        jLabel84.setText("Ej:  YYYY-MM-DD");
+
+        org.jdesktop.layout.GroupLayout jPanel1Layout = new org.jdesktop.layout.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel1Layout.createSequentialGroup()
+                .add(115, 115, 115)
+                .add(jButton9, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 130, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .add(jButton10, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 133, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(214, 214, 214))
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jSeparator9)
+                    .add(jPanel1Layout.createSequentialGroup()
+                        .add(23, 23, 23)
+                        .add(jLabel42)
+                        .add(0, 0, Short.MAX_VALUE)))
+                .add(65, 65, 65))
+            .add(jPanel1Layout.createSequentialGroup()
+                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jPanel1Layout.createSequentialGroup()
+                        .add(136, 136, 136)
+                        .add(jLab)
+                        .add(74, 74, 74)
+                        .add(txtFechaEmision, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 141, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .add(29, 29, 29)
+                        .add(jLabel84)
+                        .add(107, 107, 107)
+                        .add(jButton8))
+                    .add(jPanel1Layout.createSequentialGroup()
+                        .add(45, 45, 45)
+                        .add(jSeparator6, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 783, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(jPanel1Layout.createSequentialGroup()
+                        .add(37, 37, 37)
+                        .add(jScrollPane6, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 779, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(22, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jPanel1Layout.createSequentialGroup()
+                .add(17, 17, 17)
+                .add(jLabel42)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(jSeparator9, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 12, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                        .add(jLab)
+                        .add(txtFechaEmision, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .add(jLabel84))
+                    .add(jButton8))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(jSeparator6, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 10, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                .add(jScrollPane6, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 394, Short.MAX_VALUE)
+                .add(18, 18, 18)
+                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(jButton9)
+                    .add(jButton10))
+                .add(25, 25, 25))
+        );
+
         org.jdesktop.layout.GroupLayout jIntListarRecetasLayout = new org.jdesktop.layout.GroupLayout(jIntListarRecetas.getContentPane());
         jIntListarRecetas.getContentPane().setLayout(jIntListarRecetasLayout);
         jIntListarRecetasLayout.setHorizontalGroup(
             jIntListarRecetasLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jIntListarRecetasLayout.createSequentialGroup()
-                .add(130, 130, 130)
-                .add(jButton9, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 130, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .add(jButton10, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 133, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(169, 169, 169))
-            .add(jIntListarRecetasLayout.createSequentialGroup()
-                .add(jIntListarRecetasLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(jIntListarRecetasLayout.createSequentialGroup()
-                        .add(155, 155, 155)
-                        .add(jLab)
-                        .add(215, 215, 215)
-                        .add(jTextField21, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 141, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                    .add(jIntListarRecetasLayout.createSequentialGroup()
-                        .add(17, 17, 17)
-                        .add(jIntListarRecetasLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
-                            .add(jScrollPane6, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 812, Short.MAX_VALUE)
-                            .add(jSeparator6)))
-                    .add(jIntListarRecetasLayout.createSequentialGroup()
-                        .add(101, 101, 101)
-                        .add(jSeparator9, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 618, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                    .add(jIntListarRecetasLayout.createSequentialGroup()
-                        .add(214, 214, 214)
-                        .add(jLabel42))
-                    .add(jIntListarRecetasLayout.createSequentialGroup()
-                        .add(376, 376, 376)
-                        .add(jButton8)))
-                .addContainerGap(27, Short.MAX_VALUE))
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, jIntListarRecetasLayout.createSequentialGroup()
+                .addContainerGap()
+                .add(jPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jIntListarRecetasLayout.setVerticalGroup(
             jIntListarRecetasLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(jIntListarRecetasLayout.createSequentialGroup()
-                .add(25, 25, 25)
-                .add(jLabel42)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                .add(jSeparator9, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 12, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(jIntListarRecetasLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jTextField21, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(jLab))
-                .add(9, 9, 9)
-                .add(jButton8, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 39, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(jSeparator6, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 10, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(18, 18, 18)
-                .add(jScrollPane6, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 365, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 7, Short.MAX_VALUE)
-                .add(jIntListarRecetasLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jButton9)
-                    .add(jButton10))
-                .add(38, 38, 38))
+                .addContainerGap()
+                .add(jPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         jIntListarRecetas.setBounds(0, 10, 880, 680);
@@ -1223,9 +1673,6 @@ public class HomeMedicoVeterinario extends javax.swing.JFrame {
                             .add(341, 341, 341)
                             .add(jLabel40, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 102, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                         .add(jIntReservarAnularListarHoraLayout.createSequentialGroup()
-                            .add(130, 130, 130)
-                            .add(jCalendar1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 532, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                        .add(jIntReservarAnularListarHoraLayout.createSequentialGroup()
                             .add(364, 364, 364)
                             .add(jLabel47))
                         .add(jIntReservarAnularListarHoraLayout.createSequentialGroup()
@@ -1245,8 +1692,11 @@ public class HomeMedicoVeterinario extends javax.swing.JFrame {
                                 .add(jIntReservarAnularListarHoraLayout.createSequentialGroup()
                                     .add(6, 6, 6)
                                     .add(jSeparator8, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 720, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                                .add(jLabel46, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 743, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(39, Short.MAX_VALUE))
+                                .add(jLabel46, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 743, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+                        .add(jIntReservarAnularListarHoraLayout.createSequentialGroup()
+                            .add(130, 130, 130)
+                            .add(jCalendar1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 577, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(54, Short.MAX_VALUE))
         );
         jIntReservarAnularListarHoraLayout.setVerticalGroup(
             jIntReservarAnularListarHoraLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -1427,35 +1877,39 @@ public class HomeMedicoVeterinario extends javax.swing.JFrame {
         jIntIngresarReserva.setBounds(230, 20, 540, 570);
         jDesktopPane1.add(jIntIngresarReserva, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
-        jIntAdministrarProductos.setClosable(true);
-        jIntAdministrarProductos.setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
-        jIntAdministrarProductos.setIconifiable(true);
-        jIntAdministrarProductos.setMaximizable(true);
-        jIntAdministrarProductos.setTitle("Administración Productos Veterinaria ");
-        jIntAdministrarProductos.setVisible(false);
+        jIntCrearProductos.setBackground(new java.awt.Color(153, 153, 153));
+        jIntCrearProductos.setClosable(true);
+        jIntCrearProductos.setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
+        jIntCrearProductos.setIconifiable(true);
+        jIntCrearProductos.setMaximizable(true);
+        jIntCrearProductos.setTitle("Administración Productos Veterinaria ");
+        jIntCrearProductos.setVisible(false);
+
+        jPanel2.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
 
         jLabel34.setFont(new java.awt.Font("Lucida Grande", 0, 36)); // NOI18N
         jLabel34.setForeground(new java.awt.Color(0, 102, 102));
-        jLabel34.setText("INGRESAR PRODUCTO");
+        jLabel34.setText("CREAR    PRODUCTO");
 
+        jLabel35.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         jLabel35.setText("Codigo Barra");
 
-        jLabel37.setText("Nombre Producto");
+        jLabel41.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        jLabel41.setText("Codigo Interno Veterinaria");
 
-        jLabel39.setText("Tipo ");
+        jLabel37.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        jLabel37.setText("Nombre Producto");
 
         jComboBox3.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Medicamentos", "Insumos Simples" }));
 
-        jLabel41.setText("Codigo Interno Veterinaria");
+        jLabel39.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        jLabel39.setText("Tipo ");
 
-        jButton12.setText("Buscar");
-
+        jLabel43.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         jLabel43.setText("Precio");
 
-        jLabel44.setText("STOCK");
-
-        jLabel55.setForeground(new java.awt.Color(0, 153, 153));
-        jLabel55.setText("La Busqueda podra ser efectiva ingresando cualquiera de los dos Códigos. ");
+        jLabel44.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        jLabel44.setText("Stock");
 
         jButton18.setText("Ingresar");
         jButton18.addActionListener(new java.awt.event.ActionListener() {
@@ -1471,145 +1925,310 @@ public class HomeMedicoVeterinario extends javax.swing.JFrame {
             }
         });
 
-        jButton20.setText("Registrar Nuevo Producto");
-
-        jLabel56.setFont(new java.awt.Font("Lucida Grande", 0, 36)); // NOI18N
-        jLabel56.setForeground(new java.awt.Color(0, 102, 102));
-        jLabel56.setText("REGISTRAR NUEVO PRODUCTO");
-
-        org.jdesktop.layout.GroupLayout jIntAdministrarProductosLayout = new org.jdesktop.layout.GroupLayout(jIntAdministrarProductos.getContentPane());
-        jIntAdministrarProductos.getContentPane().setLayout(jIntAdministrarProductosLayout);
-        jIntAdministrarProductosLayout.setHorizontalGroup(
-            jIntAdministrarProductosLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, jIntAdministrarProductosLayout.createSequentialGroup()
-                .add(jIntAdministrarProductosLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(jIntAdministrarProductosLayout.createSequentialGroup()
-                        .add(139, 139, 139)
-                        .add(jIntAdministrarProductosLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(jTextField23, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 156, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(jIntAdministrarProductosLayout.createSequentialGroup()
-                                .add(38, 38, 38)
-                                .add(jLabel35)))
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .add(jIntAdministrarProductosLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(org.jdesktop.layout.GroupLayout.TRAILING, jIntAdministrarProductosLayout.createSequentialGroup()
-                                .add(jTextField25, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 128, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                .add(18, 18, 18))
-                            .add(org.jdesktop.layout.GroupLayout.TRAILING, jLabel41)))
-                    .add(org.jdesktop.layout.GroupLayout.TRAILING, jIntAdministrarProductosLayout.createSequentialGroup()
-                        .addContainerGap(150, Short.MAX_VALUE)
-                        .add(jLabel56)
-                        .add(24, 24, 24)))
-                .add(115, 115, 115))
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, jIntAdministrarProductosLayout.createSequentialGroup()
-                .add(0, 0, Short.MAX_VALUE)
-                .add(jLabel55, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 505, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(101, 101, 101))
-            .add(jIntAdministrarProductosLayout.createSequentialGroup()
-                .add(32, 32, 32)
-                .add(jButton19)
-                .add(37, 37, 37)
-                .add(jIntAdministrarProductosLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(jIntAdministrarProductosLayout.createSequentialGroup()
-                        .add(jLabel37)
-                        .add(18, 18, 18)
-                        .add(jLabel45)
-                        .add(86, 86, 86)
-                        .add(jTextField24, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 136, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                    .add(jIntAdministrarProductosLayout.createSequentialGroup()
-                        .add(jIntAdministrarProductosLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+        org.jdesktop.layout.GroupLayout jPanel2Layout = new org.jdesktop.layout.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel2Layout.createSequentialGroup()
+                .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jPanel2Layout.createSequentialGroup()
+                        .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(jLabel35)
+                            .add(jLabel41)
                             .add(jLabel39)
-                            .add(jIntAdministrarProductosLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                            .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
                                 .add(jLabel44)
-                                .add(jLabel43)))
-                        .add(172, 172, 172)
-                        .add(jIntAdministrarProductosLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                                .add(org.jdesktop.layout.GroupLayout.LEADING, jLabel43))
+                            .add(jLabel37))
+                        .add(24, 24, 24)
+                        .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(jTextField25, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 136, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(jTextField23, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 165, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(jTextField24, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 136, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                             .add(jComboBox3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 187, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(jIntAdministrarProductosLayout.createSequentialGroup()
-                                .add(6, 6, 6)
-                                .add(jIntAdministrarProductosLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                                    .add(jTextField32, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 40, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                    .add(jTextField26, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 82, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))))))
-                .addContainerGap())
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, jIntAdministrarProductosLayout.createSequentialGroup()
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .add(jIntAdministrarProductosLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(org.jdesktop.layout.GroupLayout.TRAILING, jIntAdministrarProductosLayout.createSequentialGroup()
-                        .add(jButton12)
-                        .add(345, 345, 345))
-                    .add(org.jdesktop.layout.GroupLayout.TRAILING, jIntAdministrarProductosLayout.createSequentialGroup()
-                        .add(jButton20)
-                        .add(156, 156, 156)
-                        .add(jButton18)
-                        .add(56, 56, 56))
-                    .add(org.jdesktop.layout.GroupLayout.TRAILING, jIntAdministrarProductosLayout.createSequentialGroup()
-                        .add(jLabel34)
-                        .add(219, 219, 219))))
+                            .add(jTextField26, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 93, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(jTextField32, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 46, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                        .add(50, 50, 50))
+                    .add(jPanel2Layout.createSequentialGroup()
+                        .add(122, 122, 122)
+                        .add(jButton19)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .add(jButton18)
+                .add(116, 116, 116))
+            .add(jPanel2Layout.createSequentialGroup()
+                .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jPanel2Layout.createSequentialGroup()
+                        .add(228, 228, 228)
+                        .add(jLabel34))
+                    .add(jPanel2Layout.createSequentialGroup()
+                        .add(33, 33, 33)
+                        .add(jSeparator13, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 751, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(jPanel2Layout.createSequentialGroup()
+                        .add(80, 80, 80)
+                        .add(jSeparator14, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 649, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(30, Short.MAX_VALUE))
         );
-        jIntAdministrarProductosLayout.setVerticalGroup(
-            jIntAdministrarProductosLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jIntAdministrarProductosLayout.createSequentialGroup()
-                .add(22, 22, 22)
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jPanel2Layout.createSequentialGroup()
+                .add(19, 19, 19)
                 .add(jLabel34, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 33, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(18, 18, 18)
-                .add(jLabel56, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 33, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(37, 37, 37)
-                .add(jIntAdministrarProductosLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                    .add(jIntAdministrarProductosLayout.createSequentialGroup()
-                        .add(jLabel35)
-                        .add(18, 18, 18)
-                        .add(jTextField23, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                    .add(jIntAdministrarProductosLayout.createSequentialGroup()
-                        .add(jLabel41)
-                        .add(18, 18, 18)
-                        .add(jTextField25, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 30, Short.MAX_VALUE)
-                .add(jButton12, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 39, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(18, 18, 18)
-                .add(jLabel55)
-                .add(15, 15, 15)
-                .add(jIntAdministrarProductosLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                    .add(jTextField24, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(jLabel37)
-                    .add(jLabel45))
-                .add(jIntAdministrarProductosLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(jIntAdministrarProductosLayout.createSequentialGroup()
-                        .add(32, 32, 32)
-                        .add(jLabel39))
-                    .add(org.jdesktop.layout.GroupLayout.TRAILING, jIntAdministrarProductosLayout.createSequentialGroup()
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(jComboBox3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+                .add(13, 13, 13)
+                .add(jSeparator13, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 10, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(66, 66, 66)
+                .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(jTextField23, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 39, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(jLabel35))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(jTextField25, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 39, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(jLabel41))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                .add(jSeparator14, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 24, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .add(24, 24, 24)
-                .add(jIntAdministrarProductosLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jLabel43)
-                    .add(jTextField26, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .add(22, 22, 22)
-                .add(jIntAdministrarProductosLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jTextField32, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(jLabel44))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 62, Short.MAX_VALUE)
-                .add(jIntAdministrarProductosLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(jLabel37)
+                    .add(jTextField24, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 37, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .add(18, 18, 18)
+                .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(jLabel39)
+                    .add(jComboBox3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 36, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .add(11, 11, 11)
+                .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(jTextField26, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 38, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(jLabel43))
+                .add(18, 18, 18)
+                .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(jLabel44)
+                    .add(jTextField32, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 38, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 58, Short.MAX_VALUE)
+                .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(jButton19, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 37, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(jButton20, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 37, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(jButton18, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 37, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .add(34, 34, 34))
+                .add(48, 48, 48))
         );
 
-        jIntAdministrarProductos.setBounds(210, 0, 850, 680);
-        jDesktopPane1.add(jIntAdministrarProductos, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        org.jdesktop.layout.GroupLayout jIntCrearProductosLayout = new org.jdesktop.layout.GroupLayout(jIntCrearProductos.getContentPane());
+        jIntCrearProductos.getContentPane().setLayout(jIntCrearProductosLayout);
+        jIntCrearProductosLayout.setHorizontalGroup(
+            jIntCrearProductosLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jIntCrearProductosLayout.createSequentialGroup()
+                .addContainerGap()
+                .add(jPanel2, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jIntCrearProductosLayout.setVerticalGroup(
+            jIntCrearProductosLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jIntCrearProductosLayout.createSequentialGroup()
+                .addContainerGap()
+                .add(jPanel2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
-        jIntListarEliminarProducto.setClosable(true);
-        jIntListarEliminarProducto.setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
-        jIntListarEliminarProducto.setIconifiable(true);
-        jIntListarEliminarProducto.setMaximizable(true);
-        jIntListarEliminarProducto.setTitle("Listado Productos ");
-        jIntListarEliminarProducto.setVisible(false);
+        jIntCrearProductos.setBounds(210, 0, 850, 680);
+        jDesktopPane1.add(jIntCrearProductos, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jIntCrearProductos.getAccessibleContext().setAccessibleName("Crear Productos Veterinaria ");
+
+        jIntAgregarStock.setBackground(new java.awt.Color(153, 153, 153));
+        jIntAgregarStock.setClosable(true);
+        jIntAgregarStock.setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
+        jIntAgregarStock.setIconifiable(true);
+        jIntAgregarStock.setMaximizable(true);
+        jIntAgregarStock.setResizable(true);
+        jIntAgregarStock.setTitle("Agregar Stock");
+        jIntAgregarStock.setVisible(false);
+
+        jPanel3.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+
+        jLabel45.setFont(new java.awt.Font("Stencil", 0, 48)); // NOI18N
+        jLabel45.setForeground(new java.awt.Color(0, 0, 255));
+        jLabel45.setText("Agregar Stock");
+
+        jLabel56.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        jLabel56.setText("Código");
+
+        jLabel60.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        jLabel60.setText("Código Interno");
+
+        jTextField3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField3ActionPerformed(evt);
+            }
+        });
+
+        jButton4.setText("Buscar");
+
+        jLabel61.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        jLabel61.setText("Nombre");
+
+        jLabel64.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        jLabel64.setText("Tipo");
+
+        jLabel65.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        jLabel65.setText("Precio");
+
+        jLabel68.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        jLabel68.setText("Stock");
+
+        jTextField4.setBackground(new java.awt.Color(153, 153, 153));
+        jTextField4.setEditable(false);
+        jTextField4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField4ActionPerformed(evt);
+            }
+        });
+
+        jTextField5.setBackground(new java.awt.Color(153, 153, 153));
+        jTextField5.setEditable(false);
+        jTextField5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField5ActionPerformed(evt);
+            }
+        });
+
+        jTextField6.setBackground(new java.awt.Color(153, 153, 153));
+        jTextField6.setEditable(false);
+
+        jTextField7.setBackground(new java.awt.Color(153, 153, 153));
+        jTextField7.setEditable(false);
+
+        jLabel85.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
+        jLabel85.setText("+");
+
+        jButton5.setText("Sumar");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
+
+        org.jdesktop.layout.GroupLayout jPanel3Layout = new org.jdesktop.layout.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jPanel3Layout.createSequentialGroup()
+                .add(jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jPanel3Layout.createSequentialGroup()
+                        .add(148, 148, 148)
+                        .add(jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(jLabel64)
+                            .add(jLabel65)
+                            .add(jLabel68)
+                            .add(jLabel61))
+                        .add(108, 108, 108)
+                        .add(jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(jPanel3Layout.createSequentialGroup()
+                                .add(jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
+                                    .add(jPanel3Layout.createSequentialGroup()
+                                        .add(jTextField7, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 47, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 27, Short.MAX_VALUE)
+                                        .add(jLabel85))
+                                    .add(jTextField5)
+                                    .add(jTextField6, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 67, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                                .add(65, 65, 65)
+                                .add(jTextField8, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 52, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                                .add(27, 27, 27)
+                                .add(jButton5))
+                            .add(jTextField4, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 127, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+                    .add(jPanel3Layout.createSequentialGroup()
+                        .add(155, 155, 155)
+                        .add(jLabel45))
+                    .add(jPanel3Layout.createSequentialGroup()
+                        .add(26, 26, 26)
+                        .add(jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                            .add(jSeparator17, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 601, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(jPanel3Layout.createSequentialGroup()
+                                .add(jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                                    .add(jLabel60)
+                                    .add(jLabel56))
+                                .add(48, 48, 48)
+                                .add(jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                                    .add(jTextField2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 134, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                                    .add(jPanel3Layout.createSequentialGroup()
+                                        .add(jTextField3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 85, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                                        .add(136, 136, 136)
+                                        .add(jButton4)))))))
+                .addContainerGap(92, Short.MAX_VALUE))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jPanel3Layout.createSequentialGroup()
+                .add(jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jPanel3Layout.createSequentialGroup()
+                        .add(17, 17, 17)
+                        .add(jLabel45)
+                        .add(76, 76, 76)
+                        .add(jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                            .add(jTextField2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(jLabel56))
+                        .add(26, 26, 26)
+                        .add(jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                            .add(jTextField3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(jLabel60))
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 27, Short.MAX_VALUE))
+                    .add(jPanel3Layout.createSequentialGroup()
+                        .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .add(jButton4)
+                        .add(50, 50, 50)))
+                .add(jSeparator17, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 28, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(40, 40, 40)
+                .add(jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(jLabel61)
+                    .add(jTextField4, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 28, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .add(26, 26, 26)
+                .add(jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(jLabel64)
+                    .add(jTextField5, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .add(25, 25, 25)
+                .add(jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(jLabel65)
+                    .add(jTextField6, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .add(30, 30, 30)
+                .add(jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                    .add(jLabel68)
+                    .add(jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                        .add(jTextField7, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .add(jLabel85, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 28, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .add(jTextField8, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .add(jButton5)))
+                .addContainerGap(104, Short.MAX_VALUE))
+        );
+
+        org.jdesktop.layout.GroupLayout jIntAgregarStockLayout = new org.jdesktop.layout.GroupLayout(jIntAgregarStock.getContentPane());
+        jIntAgregarStock.getContentPane().setLayout(jIntAgregarStockLayout);
+        jIntAgregarStockLayout.setHorizontalGroup(
+            jIntAgregarStockLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jIntAgregarStockLayout.createSequentialGroup()
+                .addContainerGap()
+                .add(jPanel3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jIntAgregarStockLayout.setVerticalGroup(
+            jIntAgregarStockLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jIntAgregarStockLayout.createSequentialGroup()
+                .addContainerGap()
+                .add(jPanel3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        jIntAgregarStock.setBounds(110, 10, 690, 680);
+        jDesktopPane1.add(jIntAgregarStock, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jIntAgregarStock.getAccessibleContext().setAccessibleName("Agregar Productos al Stock");
+        jIntAgregarStock.getAccessibleContext().setAccessibleDescription("");
+
+        jIntListarProductos.setClosable(true);
+        jIntListarProductos.setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
+        jIntListarProductos.setIconifiable(true);
+        jIntListarProductos.setMaximizable(true);
+        jIntListarProductos.setTitle("Listado Productos ");
+        jIntListarProductos.setVisible(false);
 
         jLabel57.setFont(new java.awt.Font("Apple Braille", 1, 36)); // NOI18N
-        jLabel57.setForeground(new java.awt.Color(0, 102, 102));
-        jLabel57.setText("LISTAR - ELIMINAR PRODUCTOS  ");
+        jLabel57.setForeground(new java.awt.Color(0, 0, 204));
+        jLabel57.setText("LISTAR PRODUCTOS  ");
 
-        jLabel58.setText("Codigo Barra");
+        jLabel58.setText("Codigo Interno");
 
         jTextField33.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1644,129 +2263,90 @@ public class HomeMedicoVeterinario extends javax.swing.JFrame {
         });
         jScrollPane8.setViewportView(jTable3);
 
-        jButton22.setText("Listar Productos");
-        jButton22.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton22ActionPerformed(evt);
-            }
-        });
-
-        jButton23.setText("Eliminar");
-
-        jButton24.setText("Cancelar");
+        jButton24.setText("Limpiar");
         jButton24.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton24ActionPerformed(evt);
             }
         });
 
-        org.jdesktop.layout.GroupLayout jIntListarEliminarProductoLayout = new org.jdesktop.layout.GroupLayout(jIntListarEliminarProducto.getContentPane());
-        jIntListarEliminarProducto.getContentPane().setLayout(jIntListarEliminarProductoLayout);
-        jIntListarEliminarProductoLayout.setHorizontalGroup(
-            jIntListarEliminarProductoLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jIntListarEliminarProductoLayout.createSequentialGroup()
+        org.jdesktop.layout.GroupLayout jIntListarProductosLayout = new org.jdesktop.layout.GroupLayout(jIntListarProductos.getContentPane());
+        jIntListarProductos.getContentPane().setLayout(jIntListarProductosLayout);
+        jIntListarProductosLayout.setHorizontalGroup(
+            jIntListarProductosLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jIntListarProductosLayout.createSequentialGroup()
                 .add(401, 401, 401)
-                .add(jIntListarEliminarProductoLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                .add(jIntListarProductosLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(jTextField33, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 142, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(jIntListarEliminarProductoLayout.createSequentialGroup()
+                    .add(jIntListarProductosLayout.createSequentialGroup()
                         .add(29, 29, 29)
                         .add(jButton21)))
                 .add(0, 0, Short.MAX_VALUE))
-            .add(jIntListarEliminarProductoLayout.createSequentialGroup()
-                .add(jIntListarEliminarProductoLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(jIntListarEliminarProductoLayout.createSequentialGroup()
-                        .add(69, 69, 69)
-                        .add(jIntListarEliminarProductoLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                            .add(jSeparator10, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 824, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(jIntListarEliminarProductoLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                                .add(jButton22, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 157, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                .add(jScrollPane8, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 833, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))))
-                    .add(jIntListarEliminarProductoLayout.createSequentialGroup()
-                        .add(431, 431, 431)
-                        .add(jLabel58)))
-                .addContainerGap(74, Short.MAX_VALUE))
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, jIntListarEliminarProductoLayout.createSequentialGroup()
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, jIntListarProductosLayout.createSequentialGroup()
                 .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .add(jLabel57)
-                .add(194, 194, 194))
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, jIntListarEliminarProductoLayout.createSequentialGroup()
-                .add(97, 97, 97)
-                .add(jButton24)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .add(jButton23)
-                .add(207, 207, 207))
+                .add(jSeparator10, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 824, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(72, 72, 72))
+            .add(jIntListarProductosLayout.createSequentialGroup()
+                .add(jIntListarProductosLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jIntListarProductosLayout.createSequentialGroup()
+                        .add(431, 431, 431)
+                        .add(jLabel58))
+                    .add(jIntListarProductosLayout.createSequentialGroup()
+                        .add(282, 282, 282)
+                        .add(jLabel57))
+                    .add(jIntListarProductosLayout.createSequentialGroup()
+                        .add(69, 69, 69)
+                        .add(jScrollPane8, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 833, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(jIntListarProductosLayout.createSequentialGroup()
+                        .add(418, 418, 418)
+                        .add(jButton24)))
+                .addContainerGap(74, Short.MAX_VALUE))
         );
-        jIntListarEliminarProductoLayout.setVerticalGroup(
-            jIntListarEliminarProductoLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jIntListarEliminarProductoLayout.createSequentialGroup()
-                .add(31, 31, 31)
+        jIntListarProductosLayout.setVerticalGroup(
+            jIntListarProductosLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jIntListarProductosLayout.createSequentialGroup()
+                .add(34, 34, 34)
                 .add(jLabel57)
-                .add(17, 17, 17)
-                .add(jSeparator10, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 10, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .add(18, 18, 18)
+                .add(jSeparator10, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                 .add(jLabel58)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                 .add(jTextField33, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jButton21)
-                .add(12, 12, 12)
-                .add(jButton22)
-                .add(27, 27, 27)
+                .add(53, 53, 53)
                 .add(jScrollPane8, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 285, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(18, 18, 18)
-                .add(jIntListarEliminarProductoLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jButton23)
-                    .add(jButton24))
-                .addContainerGap(16, Short.MAX_VALUE))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 30, Short.MAX_VALUE)
+                .add(jButton24)
+                .add(19, 19, 19))
         );
 
-        jIntListarEliminarProducto.setBounds(100, 10, 1000, 670);
-        jDesktopPane1.add(jIntListarEliminarProducto, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jIntListarProductos.setBounds(100, 10, 1000, 670);
+        jDesktopPane1.add(jIntListarProductos, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
-        jIntIngresarVenta.setClosable(true);
-        jIntIngresarVenta.setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
-        jIntIngresarVenta.setIconifiable(true);
-        jIntIngresarVenta.setMaximizable(true);
-        jIntIngresarVenta.setVisible(false);
+        jIntIngresarValeVenta.setClosable(true);
+        jIntIngresarValeVenta.setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
+        jIntIngresarValeVenta.setIconifiable(true);
+        jIntIngresarValeVenta.setMaximizable(true);
+        jIntIngresarValeVenta.setVisible(false);
 
-        jLabel59.setFont(new java.awt.Font("Apple Braille", 0, 24)); // NOI18N
+        jLabel63.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
+        jLabel63.setText("Precio Consulta");
+
+        jLabel59.setFont(new java.awt.Font("Apple Braille", 0, 30)); // NOI18N
         jLabel59.setForeground(new java.awt.Color(0, 102, 102));
-        jLabel59.setText("GENERAR VENTA ");
+        jLabel59.setText("GENERAR VALES DE VENTA ");
 
-        jLabel60.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        jLabel60.setForeground(new java.awt.Color(0, 102, 102));
-        jLabel60.setText("Atención Mascota");
+        jTextField35.setBackground(new java.awt.Color(153, 153, 153));
+        jTextField35.setEditable(false);
+        jTextField35.setText("5000");
 
-        jLabel61.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        jLabel61.setForeground(new java.awt.Color(0, 102, 102));
-        jLabel61.setText("Productos  Solicitados");
+        jLabel66.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        jLabel66.setText("Código Interno");
 
-        jLabel63.setText("Precio");
-
-        jLabel64.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
-        jLabel64.setText("Total");
-
-        jLabel65.setText("Nombre");
-
-        jTextField34.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField34ActionPerformed(evt);
-            }
-        });
-
-        jLabel66.setText("Codigo Barra ");
-
+        jLabel67.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         jLabel67.setText("Nombre Producto");
-
-        jLabel68.setText("Cantidad");
-
-        jTextField38.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField38ActionPerformed(evt);
-            }
-        });
-
-        jLabel69.setText("Precio");
 
         jTextField40.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1781,194 +2361,267 @@ public class HomeMedicoVeterinario extends javax.swing.JFrame {
             }
         });
 
-        jLabel62.setText("Codigo Atención");
-
-        jTable4.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
-            },
-            new String [] {
-                "Codigo ", "Nombre ", "Cantidad", "Precio", "Sub-Total"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.Integer.class, java.lang.Object.class, java.lang.Integer.class
-            };
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jScrollPane9.setViewportView(jTable4);
-
-        jButton26.setText("Generar Boleta");
-        jButton26.addActionListener(new java.awt.event.ActionListener() {
+        jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton26ActionPerformed(evt);
+                jTextField1ActionPerformed(evt);
             }
         });
 
-        org.jdesktop.layout.GroupLayout jIntIngresarVentaLayout = new org.jdesktop.layout.GroupLayout(jIntIngresarVenta.getContentPane());
-        jIntIngresarVenta.getContentPane().setLayout(jIntIngresarVentaLayout);
-        jIntIngresarVentaLayout.setHorizontalGroup(
-            jIntIngresarVentaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jIntIngresarVentaLayout.createSequentialGroup()
-                .add(52, 52, 52)
-                .add(jIntIngresarVentaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(jIntIngresarVentaLayout.createSequentialGroup()
-                        .add(jScrollPane9, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 782, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                        .add(0, 0, Short.MAX_VALUE))
-                    .add(jIntIngresarVentaLayout.createSequentialGroup()
-                        .add(jIntIngresarVentaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(jIntIngresarVentaLayout.createSequentialGroup()
-                                .add(110, 110, 110)
-                                .add(jLabel62))
-                            .add(jIntIngresarVentaLayout.createSequentialGroup()
-                                .add(jLabel65)
-                                .add(21, 21, 21)
-                                .add(jTextField36, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 125, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                            .add(jIntIngresarVentaLayout.createSequentialGroup()
-                                .add(jLabel68)
-                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                                .add(jTextField38, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 51, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                            .add(jIntIngresarVentaLayout.createSequentialGroup()
-                                .add(jLabel63)
-                                .add(33, 33, 33)
-                                .add(jIntIngresarVentaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                                    .add(jTextField34, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 183, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                    .add(jTextField35, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 77, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))))
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 299, Short.MAX_VALUE)
-                        .add(jIntIngresarVentaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(org.jdesktop.layout.GroupLayout.TRAILING, jIntIngresarVentaLayout.createSequentialGroup()
-                                .add(jLabel61)
-                                .add(160, 160, 160))
-                            .add(org.jdesktop.layout.GroupLayout.TRAILING, jIntIngresarVentaLayout.createSequentialGroup()
-                                .add(jIntIngresarVentaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                                    .add(jLabel66)
-                                    .add(jTextField39, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 129, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                    .add(jTextField37, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 76, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                                .add(178, 178, 178))
-                            .add(org.jdesktop.layout.GroupLayout.TRAILING, jIntIngresarVentaLayout.createSequentialGroup()
-                                .add(jTextField40, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 190, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                .add(166, 166, 166))))))
-            .add(jIntIngresarVentaLayout.createSequentialGroup()
-                .add(136, 136, 136)
-                .add(jLabel60, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 204, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(0, 0, Short.MAX_VALUE))
-            .add(jIntIngresarVentaLayout.createSequentialGroup()
-                .add(jIntIngresarVentaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(jIntIngresarVentaLayout.createSequentialGroup()
-                        .add(359, 359, 359)
-                        .add(jButton25))
-                    .add(jIntIngresarVentaLayout.createSequentialGroup()
-                        .add(313, 313, 313)
-                        .add(jLabel59))
-                    .add(jIntIngresarVentaLayout.createSequentialGroup()
-                        .add(111, 111, 111)
-                        .add(jSeparator15, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 617, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, jIntIngresarVentaLayout.createSequentialGroup()
-                .addContainerGap(37, Short.MAX_VALUE)
-                .add(jIntIngresarVentaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(org.jdesktop.layout.GroupLayout.TRAILING, jIntIngresarVentaLayout.createSequentialGroup()
-                        .add(jIntIngresarVentaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(org.jdesktop.layout.GroupLayout.TRAILING, jIntIngresarVentaLayout.createSequentialGroup()
-                                .add(jLabel64)
-                                .add(18, 18, 18))
-                            .add(org.jdesktop.layout.GroupLayout.TRAILING, jIntIngresarVentaLayout.createSequentialGroup()
-                                .add(jButton26)
-                                .add(190, 190, 190)))
-                        .add(jTextField41, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 139, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                        .add(58, 58, 58))
-                    .add(org.jdesktop.layout.GroupLayout.TRAILING, jIntIngresarVentaLayout.createSequentialGroup()
-                        .add(jSeparator13, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 356, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                        .add(jIntIngresarVentaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(jIntIngresarVentaLayout.createSequentialGroup()
-                                .add(37, 37, 37)
-                                .add(jSeparator14, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 356, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                            .add(jIntIngresarVentaLayout.createSequentialGroup()
-                                .add(26, 26, 26)
-                                .add(jIntIngresarVentaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                                    .add(jLabel69)
-                                    .add(jLabel67))))
-                        .add(80, 80, 80))))
-        );
-        jIntIngresarVentaLayout.setVerticalGroup(
-            jIntIngresarVentaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jIntIngresarVentaLayout.createSequentialGroup()
-                .add(33, 33, 33)
-                .add(jLabel59)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(jSeparator15, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 10, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(37, 37, 37)
-                .add(jIntIngresarVentaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                    .add(jIntIngresarVentaLayout.createSequentialGroup()
-                        .add(jLabel60)
-                        .add(11, 11, 11)
-                        .add(jSeparator13, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 10, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                        .add(3, 3, 3))
-                    .add(jIntIngresarVentaLayout.createSequentialGroup()
-                        .add(jLabel61)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                        .add(jSeparator14, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                        .add(1, 1, 1)))
-                .add(jIntIngresarVentaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(jLabel62, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 22, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(org.jdesktop.layout.GroupLayout.TRAILING, jLabel66))
-                .add(6, 6, 6)
-                .add(jIntIngresarVentaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(jTextField34, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(jTextField40, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .add(30, 30, 30)
-                .add(jIntIngresarVentaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jTextField35, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+        jLabel55.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        jLabel55.setText("Cantidad");
+
+        jLabel86.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        jLabel86.setText("Fecha");
+
+        jTextField9.setBackground(new java.awt.Color(153, 153, 153));
+        jTextField9.setEditable(false);
+
+        jButton3.setText("Buscar");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
+        jTblValeVentas.setModel(dtmDatosValeVentas);
+        jScrollPane9.setViewportView(jTblValeVentas);
+
+        jLabel62.setText("TOTAL");
+
+        jLabel69.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        jLabel69.setText("Precio");
+
+        jButton7.setText("Aceptar");
+
+        org.jdesktop.layout.GroupLayout jPanel4Layout = new org.jdesktop.layout.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jPanel4Layout.createSequentialGroup()
+                .add(jPanel4Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jPanel4Layout.createSequentialGroup()
+                        .add(74, 74, 74)
+                        .add(jPanel4Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(jLabel67)
+                            .add(jLabel66)
+                            .add(jLabel69)
+                            .add(jLabel55))
+                        .add(41, 41, 41)
+                        .add(jPanel4Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(jTextField1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 53, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(jTextField11, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 88, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(jTextField39, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 126, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(jTextField40, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 90, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+                    .add(jPanel4Layout.createSequentialGroup()
+                        .add(195, 195, 195)
+                        .add(jLabel59)))
+                .addContainerGap(236, Short.MAX_VALUE))
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel4Layout.createSequentialGroup()
+                .add(0, 0, Short.MAX_VALUE)
+                .add(jPanel4Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(jLabel63)
-                    .add(jLabel67)
-                    .add(jTextField39, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .add(14, 14, 14)
-                .add(jIntIngresarVentaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(jIntIngresarVentaLayout.createSequentialGroup()
-                        .add(0, 0, Short.MAX_VALUE)
-                        .add(jIntIngresarVentaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                            .add(jLabel65)
-                            .add(jTextField36, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                        .add(18, 18, 18)
-                        .add(jIntIngresarVentaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                            .add(jTextField38, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 22, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(jLabel68, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 25, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                        .add(48, 48, 48))
-                    .add(jIntIngresarVentaLayout.createSequentialGroup()
-                        .add(jIntIngresarVentaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                            .add(jTextField37, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(jLabel69))
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .add(jButton25)))
+                    .add(jLabel62))
+                .add(18, 18, 18)
+                .add(jPanel4Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jTextField35, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 85, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(jPanel4Layout.createSequentialGroup()
+                        .add(jTextField10, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 85, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .add(130, 130, 130)
+                        .add(jButton7)))
+                .add(169, 169, 169))
+            .add(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .add(jPanel4Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel4Layout.createSequentialGroup()
+                        .add(jLabel86)
+                        .add(109, 109, 109))
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel4Layout.createSequentialGroup()
+                        .add(jButton3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 105, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .add(148, 148, 148)
+                        .add(jTextField9, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 90, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .add(83, 83, 83))
+                    .add(jPanel4Layout.createSequentialGroup()
+                        .add(jSeparator15)
+                        .add(15, 15, 15))
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel4Layout.createSequentialGroup()
+                        .add(jPanel4Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
+                            .add(jScrollPane9, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 735, Short.MAX_VALUE)
+                            .add(jSeparator18))
+                        .add(47, 47, 47))))
+            .add(jPanel4Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                .add(jPanel4Layout.createSequentialGroup()
+                    .add(597, 597, 597)
+                    .add(jButton25)
+                    .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel4Layout.createSequentialGroup()
+                .addContainerGap(12, Short.MAX_VALUE)
+                .add(jLabel59)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                .add(jScrollPane9, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 126, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(jIntIngresarVentaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(jIntIngresarVentaLayout.createSequentialGroup()
-                        .add(18, 18, 18)
-                        .add(jIntIngresarVentaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                            .add(jTextField41, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 30, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(jLabel64)))
-                    .add(jIntIngresarVentaLayout.createSequentialGroup()
-                        .add(50, 50, 50)
-                        .add(jButton26, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 37, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
-                .add(56, 56, 56))
+                .add(jSeparator15, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 12, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(18, 18, 18)
+                .add(jLabel86)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(jPanel4Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(jButton3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 31, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(jTextField40, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 31, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(jLabel66)
+                    .add(jTextField9, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .add(33, 33, 33)
+                .add(jPanel4Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(jTextField39, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 22, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(jLabel67))
+                .add(26, 26, 26)
+                .add(jPanel4Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(jTextField11, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(jLabel69))
+                .add(18, 18, 18)
+                .add(jPanel4Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(jTextField1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(jLabel55))
+                .add(18, 18, 18)
+                .add(jSeparator18, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 25, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                .add(jScrollPane9, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 84, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(jPanel4Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jPanel4Layout.createSequentialGroup()
+                        .add(33, 33, 33)
+                        .add(jPanel4Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                            .add(jTextField35, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(jLabel63))
+                        .add(17, 17, 17)
+                        .add(jPanel4Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                            .add(jTextField10, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(jLabel62)))
+                    .add(jPanel4Layout.createSequentialGroup()
+                        .add(61, 61, 61)
+                        .add(jButton7)))
+                .add(264, 264, 264))
+            .add(jPanel4Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                .add(jPanel4Layout.createSequentialGroup()
+                    .add(275, 275, 275)
+                    .add(jButton25)
+                    .addContainerGap(308, Short.MAX_VALUE)))
         );
 
-        jIntIngresarVenta.setBounds(70, 0, 890, 700);
-        jDesktopPane1.add(jIntIngresarVenta, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        org.jdesktop.layout.GroupLayout jIntIngresarValeVentaLayout = new org.jdesktop.layout.GroupLayout(jIntIngresarValeVenta.getContentPane());
+        jIntIngresarValeVenta.getContentPane().setLayout(jIntIngresarValeVentaLayout);
+        jIntIngresarValeVentaLayout.setHorizontalGroup(
+            jIntIngresarValeVentaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jIntIngresarValeVentaLayout.createSequentialGroup()
+                .add(29, 29, 29)
+                .add(jPanel4, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jIntIngresarValeVentaLayout.setVerticalGroup(
+            jIntIngresarValeVentaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jIntIngresarValeVentaLayout.createSequentialGroup()
+                .add(19, 19, 19)
+                .add(jPanel4, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jIntIngresarValeVenta.setBounds(70, 0, 890, 700);
+        jDesktopPane1.add(jIntIngresarValeVenta, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        jIntListarVales.setClosable(true);
+        jIntListarVales.setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
+        jIntListarVales.setIconifiable(true);
+        jIntListarVales.setMaximizable(true);
+        jIntListarVales.setVisible(false);
+
+        jButton12.setText("Filtrar");
+        jButton12.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton12ActionPerformed(evt);
+            }
+        });
+
+        jTblValeVentas1.setModel(dtmDatosListadoVales);
+        jScrollPane13.setViewportView(jTblValeVentas1);
+
+        jLabel94.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        jLabel94.setText("Fecha Generado");
+
+        jButton20.setText("Limpiar");
+
+        jLabel95.setFont(new java.awt.Font("Lucida Grande", 0, 36)); // NOI18N
+        jLabel95.setForeground(new java.awt.Color(0, 51, 204));
+        jLabel95.setText("LISTADO VALES GENERADOS");
+
+        org.jdesktop.layout.GroupLayout jPanel5Layout = new org.jdesktop.layout.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jPanel5Layout.createSequentialGroup()
+                .add(jPanel5Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jPanel5Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                        .add(jSeparator20, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 735, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .add(jPanel5Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(jPanel5Layout.createSequentialGroup()
+                                .add(65, 65, 65)
+                                .add(jScrollPane13, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 735, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                            .add(jPanel5Layout.createSequentialGroup()
+                                .add(378, 378, 378)
+                                .add(jButton20))))
+                    .add(jPanel5Layout.createSequentialGroup()
+                        .add(161, 161, 161)
+                        .add(jLabel95)))
+                .addContainerGap(92, Short.MAX_VALUE))
+            .add(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .add(jSeparator19)
+                .add(15, 15, 15))
+            .add(jPanel5Layout.createSequentialGroup()
+                .add(96, 96, 96)
+                .add(jLabel94)
+                .add(138, 138, 138)
+                .add(jTextField15, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 113, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .add(jButton12, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 105, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(101, 101, 101))
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel5Layout.createSequentialGroup()
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .add(jLabel95)
+                .add(30, 30, 30)
+                .add(jSeparator19, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 12, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(26, 26, 26)
+                .add(jPanel5Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(jTextField15, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(jLabel94)
+                    .add(jButton12, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 31, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                .add(jSeparator20, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 25, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(18, 18, 18)
+                .add(jScrollPane13, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 284, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(63, 63, 63)
+                .add(jButton20)
+                .add(787, 787, 787))
+        );
+
+        org.jdesktop.layout.GroupLayout jIntListarValesLayout = new org.jdesktop.layout.GroupLayout(jIntListarVales.getContentPane());
+        jIntListarVales.getContentPane().setLayout(jIntListarValesLayout);
+        jIntListarValesLayout.setHorizontalGroup(
+            jIntListarValesLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, jIntListarValesLayout.createSequentialGroup()
+                .addContainerGap()
+                .add(jPanel5, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jIntListarValesLayout.setVerticalGroup(
+            jIntListarValesLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, jIntListarValesLayout.createSequentialGroup()
+                .addContainerGap()
+                .add(jPanel5, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 747, Short.MAX_VALUE))
+        );
+
+        jIntListarVales.setBounds(70, 0, 890, 700);
+        jDesktopPane1.add(jIntListarVales, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         jMenu2.setText("                      Ficha Clínica                  ");
 
@@ -2024,7 +2677,7 @@ public class HomeMedicoVeterinario extends javax.swing.JFrame {
 
         jMenu7.setText("                  Productos                           ");
 
-        jMenuItem10.setText("Administración de Productos ");
+        jMenuItem10.setText("Crear Producto");
         jMenuItem10.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem10ActionPerformed(evt);
@@ -2032,7 +2685,15 @@ public class HomeMedicoVeterinario extends javax.swing.JFrame {
         });
         jMenu7.add(jMenuItem10);
 
-        jMenuItem12.setText("Generar Listado de los Productos");
+        jMenuItem9.setText("Agregar Stock");
+        jMenuItem9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem9ActionPerformed(evt);
+            }
+        });
+        jMenu7.add(jMenuItem9);
+
+        jMenuItem12.setText("Listado de los Productos");
         jMenuItem12.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem12ActionPerformed(evt);
@@ -2042,15 +2703,23 @@ public class HomeMedicoVeterinario extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu7);
 
-        jMenu8.setText("        Administracion de las Ventas         ");
+        jMenu8.setText("        Administracion Vales Ventas         ");
 
-        jMenuItem8.setText("Productos + Atención Mascota");
+        jMenuItem8.setText("Generar Vales");
         jMenuItem8.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem8ActionPerformed(evt);
             }
         });
         jMenu8.add(jMenuItem8);
+
+        jMenuItem3.setText("Listar Vales");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
+        jMenu8.add(jMenuItem3);
 
         jMenuBar1.add(jMenu8);
 
@@ -2061,9 +2730,9 @@ public class HomeMedicoVeterinario extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(layout.createSequentialGroup()
-                .addContainerGap(63, Short.MAX_VALUE)
-                .add(jDesktopPane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 1225, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(59, 59, 59)
+                .addContainerGap(105, Short.MAX_VALUE)
+                .add(jDesktopPane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 1276, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jSeparator1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 951, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -2073,11 +2742,12 @@ public class HomeMedicoVeterinario extends javax.swing.JFrame {
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(layout.createSequentialGroup()
                         .add(205, 205, 205)
-                        .add(jSeparator1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                        .add(jSeparator1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .add(0, 0, Short.MAX_VALUE))
                     .add(layout.createSequentialGroup()
                         .addContainerGap()
-                        .add(jDesktopPane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 688, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(29, Short.MAX_VALUE))
+                        .add(jDesktopPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap())
         );
 
         pack();
@@ -2085,17 +2755,13 @@ public class HomeMedicoVeterinario extends javax.swing.JFrame {
 
     private void jMenuItem10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem10ActionPerformed
         // TODO add your handling c ode here:
-        this.jIntAdministrarProductos.setVisible(true);
+        this.jIntCrearProductos.setVisible(true);
     }//GEN-LAST:event_jMenuItem10ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
         // TODO add your handling code here
         this.jIntBuscarFicha.setVisible(true);
     }//GEN-LAST:event_jMenuItem2ActionPerformed
-
-    private void txtNumeroFichaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNumeroFichaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtNumeroFichaActionPerformed
 
     private void txtRutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtRutActionPerformed
         // TODO add your handling code here:
@@ -2105,9 +2771,9 @@ public class HomeMedicoVeterinario extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtApellidoActionPerformed
 
-    private void txtFechaNacimientoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFechaNacimientoActionPerformed
+    private void txtFechaNacActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFechaNacActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtFechaNacimientoActionPerformed
+    }//GEN-LAST:event_txtFechaNacActionPerformed
 
     private void txtEdadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEdadActionPerformed
         // TODO add your handling code here:
@@ -2115,28 +2781,62 @@ public class HomeMedicoVeterinario extends javax.swing.JFrame {
 
     private void cmbSexoMascActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbSexoMascActionPerformed
         // TODO add your handling code here:
-
-
   }//GEN-LAST:event_cmbSexoMascActionPerformed
 
     private void jBtnCrerFichaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnCrerFichaActionPerformed
-        // TODO add your handling code here:
-    control.crearFicha(new Mascota(txtNombrePro.getText(),
-                                    txtFechaNacimiento.getText(),
-                                    Integer.parseInt(txtEdad.getText()),
-                                    txtRaza.getText(),
-                                    cmbSexoMasc.getSelectedItem().toString()),
-                       new Propietario(txtRut.getText(),
-                                    txtNombreMasc.getText(),
-                                    txtApellido.getText(),Integer.parseInt(txtFono.getText()),
-                                    txtDireccion.getText(),txtEmail.getText())
-           );
-            
-            JOptionPane.showMessageDialog(null,"Ingreso OK",
-                  "AVISO DE SISTEMA", JOptionPane.PLAIN_MESSAGE);
-           
-        
-        
+
+        String mensaje = "";
+
+        Propietario objPropietario = new Propietario();
+        Mascota objMascota = new Mascota();
+
+        try {
+
+            objPropietario.setRut(this.txtRut.getText().trim());
+            objPropietario.setNombre(this.txtNombrePro.getText().trim());
+            objPropietario.setApellido(this.txtApellido.getText().trim());
+            objPropietario.setFono(Integer.parseInt(this.txtFono.getText().trim()));
+            objPropietario.setDireccion(this.txtDireccion.getText().trim());
+            objPropietario.setEmail(this.txtEmail.getText().trim());
+
+            objMascota.setPropietario(objPropietario);
+            objMascota.setNombre(this.txtNomMasc.getText().trim());
+            objMascota.setFechaNacimiento(this.txtFechaNac.getText().trim());
+            objMascota.setEdad(this.txtEdad.getText().trim());
+            objMascota.setRaza(this.txtRaza.getText().trim());
+            objMascota.setSexo(this.cmbSexoMasc.getSelectedItem().toString());
+            objMascota.setTipo_mascota(this.txtTipo.getText().trim());
+
+            InterfaceMascota MascotaDAO = DAOFactory.getDAOFactory(DAOFactory.MYSQL).getMascotaDAO();
+            long idMascota = MascotaDAO.crearMascota(objMascota);
+
+            objMascota.setIdMascota(idMascota);
+            mensaje = "Ingreso Exitoso Ficha Nº" + idMascota;
+
+            txtRut.setText("");
+            txtNombrePro.setText("");
+            txtApellido.setText("");
+            txtFono.setText("");
+            txtDireccion.setText("");
+            txtEmail.setText("");
+
+            txtNomMasc.setText("");
+            txtFechaNac.setText("");
+            txtEdad.setText("");
+            txtRaza.setText("");
+            cmbSexoMasc.getSelectedItem();
+            txtTipo.setText("");
+
+
+        } catch (Exception e) {
+
+            mensaje = "Porfavor ingrese todos los datos";
+        } finally {
+
+            this.jOptNmMensaje.showMessageDialog(null, mensaje);
+        }
+
+
     }//GEN-LAST:event_jBtnCrerFichaActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
@@ -2144,9 +2844,9 @@ public class HomeMedicoVeterinario extends javax.swing.JFrame {
         this.jIntCrearFicha.setVisible(true);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
-    private void jTextField12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField12ActionPerformed
+    private void jTxtRutPropActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTxtRutPropActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField12ActionPerformed
+    }//GEN-LAST:event_jTxtRutPropActionPerformed
 
     private void jIntCrearFichaAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_jIntCrearFichaAncestorAdded
         // TODO add your handling code here:
@@ -2163,66 +2863,164 @@ public class HomeMedicoVeterinario extends javax.swing.JFrame {
     private void jBtnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnCancelarActionPerformed
         // TODO add your handling code here:
         this.jIntCrearFicha.setVisible(false);
-        
+
+        txtRut.setText("");
+        txtNombrePro.setText("");
+        txtApellido.setText("");
+        txtFono.setText("");
+        txtDireccion.setText("");
+        txtEmail.setText("");
+
+        txtNomMasc.setText("");
+        txtFechaNac.setText("");
+        txtEdad.setText("");
+        txtRaza.setText("");
+        cmbSexoMasc.getSelectedItem();
+        txtTipo.setText("");
+
     }//GEN-LAST:event_jBtnCancelarActionPerformed
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    private void jBtnBuscarMascActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnBuscarMascActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton4ActionPerformed
 
-    private void jTextField16ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField16ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField16ActionPerformed
+        String nmMensaje = "";
+        Mascota objMascota = new Mascota();
+        DefaultTableModel tablaMascota = new DefaultTableModel();
 
-    private void jTextField17ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField17ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField17ActionPerformed
+        try {
+
+            InterfaceMascota MascotaDAO = DAOFactory.getDAOFactory(DAOFactory.MYSQL).getMascotaDAO();
+            List<Mascota> objLista = MascotaDAO.buscarMascota(this.jTxtRutProp.getText().trim());
+
+
+            tablaMascota.addColumn("Número de Ficha");
+            tablaMascota.addColumn("Nombre");
+            tablaMascota.addColumn("Fecha de Nacimiento");
+            tablaMascota.addColumn("Edad");
+            tablaMascota.addColumn("Raza");
+            tablaMascota.addColumn("Sexo");
+            tablaMascota.addColumn("Especie");
+            tablaMascota.setRowCount(objLista.size());
+
+
+            if (this.jTxtRutProp.getText().isEmpty()) {
+
+                nmMensaje = "Por Favor Ingrese Rut del Propietario";
+                throw new Exception(nmMensaje);
+            } else if (objLista.isEmpty()) {
+                nmMensaje = "Rut ingresado no registra Mascota Asociada";
+                throw new Exception(nmMensaje);
+
+            } else {
+
+                int i = 0;
+                for (Mascota mascota1 : objLista) {
+
+                    tablaMascota.setValueAt(mascota1.getIdMascota(), i, 0);
+                    tablaMascota.setValueAt(mascota1.getNombre(), i, 1);
+                    tablaMascota.setValueAt(mascota1.getFechaNacimiento(), i, 2);
+                    tablaMascota.setValueAt(mascota1.getEdad(), i, 3);
+                    tablaMascota.setValueAt(mascota1.getRaza(), i, 4);
+                    tablaMascota.setValueAt(mascota1.getSexo(), i, 5);
+                    tablaMascota.setValueAt(mascota1.getTipo_mascota(), i, 6);
+                    i++;
+                }
+
+                this.jTblMascotas.setModel(tablaMascota);
+            }
+        } catch (Exception e) {
+
+            this.jOptNmMensaje.showMessageDialog(null, nmMensaje);
+        }
+
+    }//GEN-LAST:event_jBtnBuscarMascActionPerformed
 
     private void jBtnModificarFichaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnModificarFichaActionPerformed
         // TODO add your handling code here:
         this.jIntModificarFicha.setVisible(true);
+
+        //SE TRANSFORMA LA HORA A TEXTO Y SE IMPRIME POR PANTALLA LA FECHA ACTUAL.
+        SimpleDateFormat formatoDeFecha = new SimpleDateFormat("dd/MM/yyyy");
+        this.TxtFechaHisCli.setText(formatoDeFecha.format(new Date()));
+
+        int numFila = jTblMascotas.getSelectedRow();
+        Object o = jTblMascotas.getModel().getValueAt(numFila, 0);
+        System.out.println("MASCOTA SELECTED=" + o);
+
+
     }//GEN-LAST:event_jBtnModificarFichaActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
         // TODO add your handling code here:
         this.jIntBuscarFicha.setVisible(false);
-    }//GEN-LAST:event_jButton6ActionPerformed
+        this.jTblMascotas.setModel(new DefaultTableModel());
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
-        this.jIntModificarFicha.setVisible(false);
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
         // TODO add your handling code here:
         this.jIntGenerarReceta.setVisible(true);
+              
+        //SE TRANSFORMA LA HORA A TEXTO Y SE IMPRIME POR PANTALLA LA FECHA ACTUAL.
+        SimpleDateFormat formatoDeFecha = new SimpleDateFormat("dd/MM/yyyy");
+        txtFechaCreacion.setText(formatoDeFecha.format(new Date()));
     }//GEN-LAST:event_jMenuItem4ActionPerformed
-
-    private void jTextField20ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField20ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField20ActionPerformed
-
-    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-        // TODO add your handling code here:
-        this.jIntGenerarReceta.setVisible(false);
-    }//GEN-LAST:event_jButton7ActionPerformed
-
-    private void jTextField22ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField22ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField22ActionPerformed
 
     private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
         // TODO add your handling code here:
+        
         this.jIntListarRecetas.setVisible(true);
+        
+         
+        Receta objReceta = new Receta();
+        DefaultTableModel tablaReceta = new DefaultTableModel();
+              
+            InterfaceReceta RecetaDAO = DAOFactory.getDAOFactory(DAOFactory.MYSQL).getRecetaDAO();
+            List<Receta> objLista =RecetaDAO.buscarRecetas();
+
+            
+            tablaReceta.addColumn("Folio");
+            tablaReceta.addColumn("Fecha Emisión");
+            tablaReceta.addColumn("R.P");
+            tablaReceta.addColumn("Nº Ficha");
+            tablaReceta.addColumn("Nombre");
+            tablaReceta.addColumn("Edad");
+            tablaReceta.addColumn("Sexo");
+            tablaReceta.addColumn("Especie");
+                    
+            tablaReceta.setRowCount(objLista.size());
+
+                int i = 0;
+                for (Receta receta1 : objLista) {
+
+                    tablaReceta.setValueAt(receta1.getFolio(), i, 0);
+                    tablaReceta.setValueAt(receta1.getFecha(), i, 1);
+                    tablaReceta.setValueAt(receta1.getRP(), i, 2);
+                    tablaReceta.setValueAt(receta1.getObjMasc().getIdMascota(), i, 3);
+                    tablaReceta.setValueAt(receta1.getObjMasc().getNombre(), i, 4);
+                    tablaReceta.setValueAt(receta1.getObjMasc().getEdad(), i, 5);
+                    tablaReceta.setValueAt(receta1.getObjMasc().getSexo(), i, 6);
+                    tablaReceta.setValueAt(receta1.getObjMasc().getTipo_mascota(), i, 7);
+                 
+                   
+                    i++;
+             }
+
+             this.jTablaReceta.setModel(tablaReceta);
+
     }//GEN-LAST:event_jMenuItem5ActionPerformed
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
         // TODO add your handling code here:
+           jTablaReceta.setModel(new DefaultTableModel());
+            txtFechaEmision.setText("");
     }//GEN-LAST:event_jButton9ActionPerformed
 
     private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
         // TODO add your handling code here:
         this.jIntListarRecetas.setVisible(false);
+        jTablaReceta.setModel(new DefaultTableModel());
+        txtFechaEmision.setText("");
     }//GEN-LAST:event_jButton10ActionPerformed
 
     private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
@@ -2266,34 +3064,22 @@ public class HomeMedicoVeterinario extends javax.swing.JFrame {
 
     private void jButton19ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton19ActionPerformed
         // TODO add your handling code here:
-        this.jIntAdministrarProductos.setVisible(false);
+        this.jIntCrearProductos.setVisible(false);
     }//GEN-LAST:event_jButton19ActionPerformed
 
     private void jTextField33ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField33ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField33ActionPerformed
 
-    private void jButton22ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton22ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton22ActionPerformed
-
     private void jMenuItem12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem12ActionPerformed
         // TODO add your handling code here:
-        this.jIntListarEliminarProducto.setVisible(true);
+        this.jIntListarProductos.setVisible(true);
     }//GEN-LAST:event_jMenuItem12ActionPerformed
 
     private void jButton24ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton24ActionPerformed
         // TODO add your handling code here:
-        this.jIntListarEliminarProducto.setVisible(false);
+        this.jIntListarProductos.setVisible(false);
     }//GEN-LAST:event_jButton24ActionPerformed
-
-    private void jTextField34ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField34ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField34ActionPerformed
-
-    private void jTextField38ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField38ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField38ActionPerformed
 
     private void jTextField40ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField40ActionPerformed
         // TODO add your handling code here:
@@ -2303,20 +3089,334 @@ public class HomeMedicoVeterinario extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton25ActionPerformed
 
-    private void jButton26ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton26ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton26ActionPerformed
-
     private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
         // TODO add your handling code here:
-        this.jIntIngresarVenta.setVisible(true);
+        this.jIntIngresarValeVenta.setVisible(true);
     }//GEN-LAST:event_jMenuItem8ActionPerformed
+
+    private void txtTipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTipoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtTipoActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+
+        txtRut.setText("");
+        txtNombrePro.setText("");
+        txtApellido.setText("");
+        txtFono.setText("");
+        txtDireccion.setText("");
+        txtEmail.setText("");
+
+        txtNomMasc.setText("");
+        txtFechaNac.setText("");
+        txtEdad.setText("");
+        txtRaza.setText("");
+        cmbSexoMasc.getSelectedItem();
+        txtTipo.setText("");
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void txtNomMascActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNomMascActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtNomMascActionPerformed
+
+    private void jBtnHistCliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnHistCliActionPerformed
+        // TODO add your handling code here:
+
+
+        int numFila = jTblMascotas.getSelectedRow();
+        Object o = jTblMascotas.getModel().getValueAt(numFila, 0);
+        System.out.println("MASCOTA SELECTED=" + o);
+
+        String mensaje = "";
+
+        Mascota objMascota = new Mascota();
+        Consulta objConsulta = new Consulta();
+
+        try {
+
+            objConsulta.setFechaConsulta(new Date());
+            objConsulta.setHallazgosClinico(this.TxtHallazgoClinico.getText().trim());
+            objConsulta.setDiagnostico(this.TxtDiagnostico.getText().trim());
+            objConsulta.setMedicamentos(this.TxtMedicamentos.getText().trim());
+            objConsulta.setExamenesSolicitadosResultados(this.TxtExamenesSolicitados.getText().trim());
+            objConsulta.setTratamiento(this.txtTratamiento.getText().trim());
+            objConsulta.setVacunaAdministrada(this.CmbVacunaAdm.getSelectedItem().toString());
+            objConsulta.setIndicacion(this.CmbIndicacion.getSelectedItem().toString());
+            objConsulta.setDesparacitacion(this.CmbDesp.getSelectedItem().toString());
+            objConsulta.setFechaProximaVacuna(this.TxtFechaVacuna.getText().trim());
+            objConsulta.setFechaProximaDesparasitacion(this.TxtFechaDesp.getText().trim());
+            objConsulta.setFechaProximoControl(this.TxtFechaControl.getText().trim());
+            objConsulta.setHoraProximoControl(this.TxtHoraControl.getText().trim());
+
+
+            if (objConsulta.getDiagnostico().equals("") && objConsulta.getTratamiento().equals("") && objConsulta.getTratamiento().equals("")) {
+
+                mensaje = "Importante.  PRE-DIAGNOSTICO - TRATAMIENTO Son Campos Obligatorio";
+
+            } else {
+
+
+                objMascota.setIdMascota(Integer.parseInt(o.toString()));
+
+                InterfaceMascota MascotaDAO = DAOFactory.getDAOFactory(DAOFactory.MYSQL).getMascotaDAO();
+                long idConsulta = MascotaDAO.HistorialClinico(objConsulta, objMascota);
+
+                objConsulta.setIdConsulta(idConsulta);
+                mensaje = " FOLIO CONSULTA Nº" + idConsulta;
+
+                TxtHallazgoClinico.setText("");
+                TxtDiagnostico.setText("");
+                TxtMedicamentos.setText("");
+                TxtExamenesSolicitados.setText("");
+                txtTratamiento.setText("");
+                CmbVacunaAdm.getSelectedItem();
+                CmbIndicacion.getSelectedItem();
+                CmbDesp.getSelectedItem();
+                TxtFechaVacuna.setText("");
+                TxtFechaDesp.setText("");
+                TxtFechaControl.setText("");
+                TxtHoraControl.setText("");
+            }
+
+        } catch (Exception e) {
+
+
+            mensaje = "Error";
+
+        } finally {
+
+            this.jOptNmMensaje.showMessageDialog(null, mensaje);
+        }
+
+
+
+    }//GEN-LAST:event_jBtnHistCliActionPerformed
+
+    private void TxtFechaHisCliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtFechaHisCliActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TxtFechaHisCliActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        TxtHallazgoClinico.setText("");
+        TxtDiagnostico.setText("");
+        TxtMedicamentos.setText("");
+        TxtExamenesSolicitados.setText("");
+        txtTratamiento.setText("");
+        CmbVacunaAdm.getSelectedItem();
+        CmbIndicacion.getSelectedItem();
+        CmbDesp.getSelectedItem();
+        TxtFechaVacuna.setText("");
+        TxtFechaDesp.setText("");
+        TxtFechaControl.setText("");
+        TxtHoraControl.setText("");
+
+        jPModificarHistorial.setVisible(false);
+
+
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jBtnLimpiarTblActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnLimpiarTblActionPerformed
+        // TODO add your handling code here:
+        this.jTblMascotas.setModel(new DefaultTableModel());
+    }//GEN-LAST:event_jBtnLimpiarTblActionPerformed
+
+    private void TxtFechaDespActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtFechaDespActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TxtFechaDespActionPerformed
+
+    private void CmbDespActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CmbDespActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_CmbDespActionPerformed
+
+    private void BtnBuscarMascActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnBuscarMascActionPerformed
+        // TODO add your handling code here:
+
+        CbMascotaAcosiada.removeAllItems();
+
+        Propietario propietario = new Propietario();
+        
+        propietario.getRut();
+
+        InterfaceMascota mascotaDAO = DAOFactory.getDAOFactory(DAOFactory.MYSQL).getMascotaDAO();
+        List<Mascota> listaMascota = mascotaDAO.buscarMascota(this.TxtRutProp.getText());
+
+        for (Mascota mascota1 : listaMascota) {
+            this.CbMascotaAcosiada.addItem(mascota1);
+        }
+
+    }//GEN-LAST:event_BtnBuscarMascActionPerformed
+
+    private void CbMascotaAcosiadaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CbMascotaAcosiadaActionPerformed
+        // TODO add your handling code here:
+
+        mascota = (Mascota) CbMascotaAcosiada.getSelectedItem();
+
+        if (mascota != null) {
+
+            jTextRazaMascota.setText(mascota.getRaza());
+            txtSexo.setText(mascota.getSexo());
+            txtEdadMasc.setText(mascota.getEdad());
+            txtEspecie.setText(mascota.getTipo_mascota());
+
+        } else {
+
+            jTextRazaMascota.setText("");
+            txtSexo.setText("");
+            txtEdadMasc.setText("");
+            txtEspecie.setText("");
+        }
+
+    }//GEN-LAST:event_CbMascotaAcosiadaActionPerformed
+
+    private void TxtRutPropActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtRutPropActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TxtRutPropActionPerformed
+
+    private void btnGenerarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerarActionPerformed
+    
+        String mensaje = "";
+        Receta receta = new Receta();    
+
+        try {
+
+            receta.setFecha(new Date());
+            SimpleDateFormat formateador = new SimpleDateFormat("dd-MM-yyyy");
+            receta.setRP(TxtRp.getText().trim());
+            
+            
+            InterfaceReceta recetaDAO = DAOFactory.getDAOFactory(DAOFactory.MYSQL).getRecetaDAO();
+ 
+                if(TxtRp.getText().isEmpty()){
+                
+                    throw new Exception(mensaje);                       
+                }
+                else{
+                
+                    long folio = recetaDAO.generarReceta(receta, mascota.getIdMascota());
+                
+                    receta.setFolio(folio);
+                    mensaje = " FOLIO Nº" + folio;
+
+                    TxtRp.setText("");
+                    CbMascotaAcosiada.removeAllItems();
+                    TxtRutProp.setText("");
+                }
+ 
+        } catch (Exception e) {
+
+            mensaje = "RP es un Campo Obligatorio";
+        } finally {
+
+            this.jOptNmMensaje.showMessageDialog(null, mensaje);
+        }
+
+
+
+    }//GEN-LAST:event_btnGenerarActionPerformed
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        // TODO add your handling code here:
+        this.jIntGenerarReceta.setVisible(false);
+          
+            TxtRp.setText("");
+            CbMascotaAcosiada.removeAllItems();
+            TxtRutProp.setText("");
+    }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void txtFechaCreacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFechaCreacionActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtFechaCreacionActionPerformed
+
+    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
+        // TODO add your handling code here:
+        
+        Receta objReceta = new Receta();
+        DefaultTableModel tablaReceta = new DefaultTableModel();
+    
+
+        
+            InterfaceReceta RecetaDAO = DAOFactory.getDAOFactory(DAOFactory.MYSQL).getRecetaDAO();
+    
+            List<Receta> objLista =RecetaDAO.FiltrarReceta(txtFechaEmision.getText().trim());
+            
+            tablaReceta.addColumn("Folio");
+            tablaReceta.addColumn("Fecha Emisión");
+            tablaReceta.addColumn("R.P");
+            tablaReceta.addColumn("Nº Ficha");
+            tablaReceta.addColumn("Nombre");
+            tablaReceta.addColumn("Edad");
+            tablaReceta.addColumn("Sexo");
+            tablaReceta.addColumn("Especie");
+                    
+            tablaReceta.setRowCount(objLista.size());
+
+                int i = 0;
+                for (Receta receta1 : objLista) {
+
+                    tablaReceta.setValueAt(receta1.getFolio(), i, 0);
+                    tablaReceta.setValueAt(receta1.getFecha(), i, 1);
+                    tablaReceta.setValueAt(receta1.getRP(), i, 2);
+                    tablaReceta.setValueAt(receta1.getObjMasc().getIdMascota(), i, 3);
+                    tablaReceta.setValueAt(receta1.getObjMasc().getNombre(), i, 4);
+                    tablaReceta.setValueAt(receta1.getObjMasc().getEdad(), i, 5);
+                    tablaReceta.setValueAt(receta1.getObjMasc().getSexo(), i, 6);
+                    tablaReceta.setValueAt(receta1.getObjMasc().getTipo_mascota(), i, 7);
+                 
+                   
+                    i++;
+             }
+
+             this.jTablaReceta.setModel(tablaReceta);
+        
+        
+        
+        
+    }//GEN-LAST:event_jButton8ActionPerformed
+
+    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField1ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jMenuItem9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem9ActionPerformed
+        // TODO add your handling code here:
+        jIntAgregarStock.setVisible(true);
+    }//GEN-LAST:event_jMenuItem9ActionPerformed
+
+    private void jTextField3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField3ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField3ActionPerformed
+
+    private void jTextField4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField4ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField4ActionPerformed
+
+    private void jTextField5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField5ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField5ActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton12ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton12ActionPerformed
+
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+    // TODO add your handling code here:
+        jIntListarVales.setVisible(true);
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     /**
      * @param args the command line arguments
      */
-    public void init() 
-    {
+    public void init() {
         /*
          * Set the Nimbus look and feel
          */
@@ -2355,10 +3455,33 @@ public class HomeMedicoVeterinario extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton BtnBuscarMasc;
+    private javax.swing.JComboBox CbMascotaAcosiada;
+    private javax.swing.JComboBox CmbDesp;
+    private javax.swing.JComboBox CmbIndicacion;
+    private javax.swing.JComboBox CmbVacunaAdm;
+    private javax.swing.JLabel LbRut;
+    private javax.swing.JTextArea TxtDiagnostico;
+    private javax.swing.JTextArea TxtExamenesSolicitados;
+    private javax.swing.JTextField TxtFechaControl;
+    private javax.swing.JTextField TxtFechaDesp;
+    private javax.swing.JTextField TxtFechaHisCli;
+    private javax.swing.JTextField TxtFechaVacuna;
+    private javax.swing.JTextArea TxtHallazgoClinico;
+    private javax.swing.JTextField TxtHoraControl;
+    private javax.swing.JTextArea TxtMedicamentos;
+    private javax.swing.JTextArea TxtRp;
+    private javax.swing.JTextField TxtRutProp;
+    private javax.swing.JButton btnCancelar;
+    private javax.swing.JButton btnGenerar;
     private javax.swing.JComboBox cmbSexoMasc;
+    private javax.swing.JButton jBtnBuscarMasc;
     private javax.swing.JButton jBtnCancelar;
     private javax.swing.JButton jBtnCrerFicha;
+    private javax.swing.JButton jBtnHistCli;
+    private javax.swing.JButton jBtnLimpiarTbl;
     private javax.swing.JButton jBtnModificarFicha;
+    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton11;
     private javax.swing.JButton jButton12;
@@ -2372,11 +3495,8 @@ public class HomeMedicoVeterinario extends javax.swing.JFrame {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton20;
     private javax.swing.JButton jButton21;
-    private javax.swing.JButton jButton22;
-    private javax.swing.JButton jButton23;
     private javax.swing.JButton jButton24;
     private javax.swing.JButton jButton25;
-    private javax.swing.JButton jButton26;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
@@ -2386,18 +3506,19 @@ public class HomeMedicoVeterinario extends javax.swing.JFrame {
     private javax.swing.JButton jButton9;
     private com.toedter.calendar.JCalendar jCalendar1;
     private javax.swing.JColorChooser jColorChooser1;
-    private javax.swing.JComboBox jComboBox2;
     private javax.swing.JComboBox jComboBox3;
     private com.toedter.calendar.JDateChooser jDateChooser1;
     private javax.swing.JDesktopPane jDesktopPane1;
-    private javax.swing.JInternalFrame jIntAdministrarProductos;
+    private javax.swing.JInternalFrame jIntAgregarStock;
     private javax.swing.JInternalFrame jIntBuscarFicha;
     private javax.swing.JInternalFrame jIntCrearFicha;
+    private javax.swing.JInternalFrame jIntCrearProductos;
     private javax.swing.JInternalFrame jIntGenerarReceta;
     private javax.swing.JInternalFrame jIntIngresarReserva;
-    private javax.swing.JInternalFrame jIntIngresarVenta;
-    private javax.swing.JInternalFrame jIntListarEliminarProducto;
+    private javax.swing.JInternalFrame jIntIngresarValeVenta;
+    private javax.swing.JInternalFrame jIntListarProductos;
     private javax.swing.JInternalFrame jIntListarRecetas;
+    private javax.swing.JInternalFrame jIntListarVales;
     private javax.swing.JInternalFrame jIntModificarFicha;
     private javax.swing.JInternalFrame jIntReservarAnularListarHora;
     private javax.swing.JLabel jLab;
@@ -2468,8 +3589,27 @@ public class HomeMedicoVeterinario extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel68;
     private javax.swing.JLabel jLabel69;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel70;
+    private javax.swing.JLabel jLabel71;
+    private javax.swing.JLabel jLabel72;
+    private javax.swing.JLabel jLabel73;
+    private javax.swing.JLabel jLabel74;
+    private javax.swing.JLabel jLabel75;
+    private javax.swing.JLabel jLabel76;
+    private javax.swing.JLabel jLabel77;
+    private javax.swing.JLabel jLabel78;
+    private javax.swing.JLabel jLabel79;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel80;
+    private javax.swing.JLabel jLabel81;
+    private javax.swing.JLabel jLabel82;
+    private javax.swing.JLabel jLabel83;
+    private javax.swing.JLabel jLabel84;
+    private javax.swing.JLabel jLabel85;
+    private javax.swing.JLabel jLabel86;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JLabel jLabel94;
+    private javax.swing.JLabel jLabel95;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
@@ -2484,14 +3624,28 @@ public class HomeMedicoVeterinario extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem10;
     private javax.swing.JMenuItem jMenuItem12;
     private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JMenuItem jMenuItem8;
+    private javax.swing.JMenuItem jMenuItem9;
+    private javax.swing.JOptionPane jOptNmMensaje;
+    private javax.swing.JPanel jPBuscFicha;
+    private javax.swing.JPanel jPCrearFicha;
+    private javax.swing.JPanel jPGenerarReceta;
+    private javax.swing.JPanel jPModificarHistorial;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane10;
+    private javax.swing.JScrollPane jScrollPane11;
+    private javax.swing.JScrollPane jScrollPane12;
+    private javax.swing.JScrollPane jScrollPane13;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
@@ -2507,7 +3661,12 @@ public class HomeMedicoVeterinario extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator13;
     private javax.swing.JSeparator jSeparator14;
     private javax.swing.JSeparator jSeparator15;
+    private javax.swing.JSeparator jSeparator16;
+    private javax.swing.JSeparator jSeparator17;
+    private javax.swing.JSeparator jSeparator18;
+    private javax.swing.JSeparator jSeparator19;
     private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JSeparator jSeparator20;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JSeparator jSeparator5;
@@ -2515,26 +3674,17 @@ public class HomeMedicoVeterinario extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator7;
     private javax.swing.JSeparator jSeparator8;
     private javax.swing.JSeparator jSeparator9;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable jTablaReceta;
     private javax.swing.JTable jTable2;
     private javax.swing.JTable jTable3;
-    private javax.swing.JTable jTable4;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextArea jTextArea2;
-    private javax.swing.JTextArea jTextArea3;
-    private javax.swing.JTextArea jTextArea4;
-    private javax.swing.JTextArea jTextArea5;
-    private javax.swing.JTextField jTextField12;
-    private javax.swing.JTextField jTextField13;
-    private javax.swing.JTextField jTextField14;
+    private javax.swing.JTable jTblMascotas;
+    private javax.swing.JTable jTblValeVentas;
+    private javax.swing.JTable jTblValeVentas1;
+    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextField10;
+    private javax.swing.JTextField jTextField11;
     private javax.swing.JTextField jTextField15;
-    private javax.swing.JTextField jTextField16;
-    private javax.swing.JTextField jTextField17;
-    private javax.swing.JTextField jTextField18;
-    private javax.swing.JTextField jTextField19;
-    private javax.swing.JTextField jTextField20;
-    private javax.swing.JTextField jTextField21;
-    private javax.swing.JTextField jTextField22;
+    private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField23;
     private javax.swing.JTextField jTextField24;
     private javax.swing.JTextField jTextField25;
@@ -2542,28 +3692,39 @@ public class HomeMedicoVeterinario extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField27;
     private javax.swing.JTextField jTextField28;
     private javax.swing.JTextField jTextField29;
+    private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField30;
     private javax.swing.JTextField jTextField31;
     private javax.swing.JTextField jTextField32;
     private javax.swing.JTextField jTextField33;
-    private javax.swing.JTextField jTextField34;
     private javax.swing.JTextField jTextField35;
-    private javax.swing.JTextField jTextField36;
-    private javax.swing.JTextField jTextField37;
-    private javax.swing.JTextField jTextField38;
     private javax.swing.JTextField jTextField39;
+    private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField40;
-    private javax.swing.JTextField jTextField41;
+    private javax.swing.JTextField jTextField5;
+    private javax.swing.JTextField jTextField6;
+    private javax.swing.JTextField jTextField7;
+    private javax.swing.JTextField jTextField8;
+    private javax.swing.JTextField jTextField9;
+    private javax.swing.JTextField jTextRazaMascota;
+    private javax.swing.JTree jTree1;
+    private javax.swing.JTextField jTxtRutProp;
     private javax.swing.JTextField txtApellido;
     private javax.swing.JTextField txtDireccion;
     private javax.swing.JTextField txtEdad;
+    private javax.swing.JTextField txtEdadMasc;
     private javax.swing.JTextField txtEmail;
-    private javax.swing.JTextField txtFechaNacimiento;
+    private javax.swing.JTextField txtEspecie;
+    private javax.swing.JTextField txtFechaCreacion;
+    private javax.swing.JTextField txtFechaEmision;
+    private javax.swing.JTextField txtFechaNac;
     private javax.swing.JTextField txtFono;
-    private javax.swing.JTextField txtNombreMasc;
+    private javax.swing.JTextField txtNomMasc;
     private javax.swing.JTextField txtNombrePro;
-    private javax.swing.JTextField txtNumeroFicha;
     private javax.swing.JTextField txtRaza;
     private javax.swing.JTextField txtRut;
+    private javax.swing.JTextField txtSexo;
+    private javax.swing.JTextField txtTipo;
+    private javax.swing.JTextArea txtTratamiento;
     // End of variables declaration//GEN-END:variables
 }

@@ -423,7 +423,7 @@ public class HomeRecepcionista extends javax.swing.JFrame {
         jIntCrearFichaLayout.setHorizontalGroup(
             jIntCrearFichaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(org.jdesktop.layout.GroupLayout.TRAILING, jIntCrearFichaLayout.createSequentialGroup()
-                .add(0, 126, Short.MAX_VALUE)
+                .add(0, 0, Short.MAX_VALUE)
                 .add(jIntCrearFichaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(org.jdesktop.layout.GroupLayout.TRAILING, jIntCrearFichaLayout.createSequentialGroup()
                         .add(jLabel10)
@@ -1242,11 +1242,12 @@ public class HomeRecepcionista extends javax.swing.JFrame {
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(layout.createSequentialGroup()
                         .add(205, 205, 205)
-                        .add(jSeparator1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                        .add(jSeparator1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .add(0, 0, Short.MAX_VALUE))
                     .add(layout.createSequentialGroup()
                         .addContainerGap()
-                        .add(jDesktopPane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 688, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(29, Short.MAX_VALUE))
+                        .add(jDesktopPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap())
         );
 
         pack();

@@ -2,20 +2,23 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package Ficha;
+package Entidades;
+
+import java.util.List;
 
 /**
  *
  * @author Administrador
  */
 public class Propietario {
-     private String rut;
+    
+    private String rut;
     private String nombre;
     private String apellido;
     private int fono;
     private String direccion;
     private String email;
-    
+            
     public Propietario(String rut, String nombre, String apellido, int fono, String direccion, String email)
     {
          this.rut = rut;
@@ -24,6 +27,10 @@ public class Propietario {
          this.fono = fono;
          this.direccion = direccion;
          this.email = email;
+    }
+
+    public Propietario() {
+        
     }
 
     public String getApellido() {
@@ -73,7 +80,7 @@ public class Propietario {
     public void setRut(String rut) {
         this.rut = rut;
     }
-       
+
 
     
 }

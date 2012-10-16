@@ -7,6 +7,9 @@ package Login;
 import admveterinaria.Interface.HomeEncargadoBodega;
 import admveterinaria.Interface.HomeMedicoVeterinario;
 import admveterinaria.Interface.HomeRecepcionista;
+import java.awt.BorderLayout;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -49,47 +52,53 @@ public class login extends javax.swing.JFrame {
     private void initComponents() {
 
         jOptionPane = new javax.swing.JOptionPane();
-        Login = new javax.swing.JPanel();
+        jDeskInicio = new javax.swing.JDesktopPane();
         btnSalirSistema = new javax.swing.JButton();
         jBtnIngresoUsuario = new javax.swing.JButton();
+        jPswClave = new javax.swing.JPasswordField();
         jTxtUsuario = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
-        jPswClave = new javax.swing.JPasswordField();
         jSeparator1 = new javax.swing.JSeparator();
+        jSeparator2 = new javax.swing.JSeparator();
+        jSeparator3 = new javax.swing.JSeparator();
+        jSeparator4 = new javax.swing.JSeparator();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("LOGIN");
+        setTitle("INICIO");
+        setBackground(java.awt.Color.darkGray);
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        setMinimumSize(new java.awt.Dimension(970, 500));
+        setSize(new java.awt.Dimension(2304, 734));
         setUndecorated(true);
 
+        jDeskInicio.setBackground(new java.awt.Color(204, 204, 204));
+        jDeskInicio.setBounds(new java.awt.Rectangle(0, 20, 900, 0));
+        jDeskInicio.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jDeskInicio.setEnabled(false);
+        jDeskInicio.setMinimumSize(new java.awt.Dimension(700, 700));
+
+        btnSalirSistema.setBackground(new java.awt.Color(102, 153, 255));
+        btnSalirSistema.setForeground(new java.awt.Color(255, 255, 255));
         btnSalirSistema.setText("Salir");
         btnSalirSistema.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSalirSistemaActionPerformed(evt);
             }
         });
+        btnSalirSistema.setBounds(120, 590, 100, 40);
+        jDeskInicio.add(btnSalirSistema, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
+        jBtnIngresoUsuario.setBackground(new java.awt.Color(102, 153, 255));
+        jBtnIngresoUsuario.setForeground(new java.awt.Color(255, 255, 255));
         jBtnIngresoUsuario.setText("Ingresar");
         jBtnIngresoUsuario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jBtnIngresoUsuarioActionPerformed(evt);
             }
         });
-
-        jTxtUsuario.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTxtUsuarioActionPerformed(evt);
-            }
-        });
-
-        jLabel3.setText("Clave");
-
-        jLabel2.setText("Usuario");
-
-        jLabel1.setFont(new java.awt.Font("Lucida Grande", 0, 36)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(0, 102, 102));
-        jLabel1.setText("Clínica Veterinaria ");
+        jBtnIngresoUsuario.setBounds(1020, 590, 110, 40);
+        jDeskInicio.add(jBtnIngresoUsuario, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         jPswClave.setHorizontalAlignment(javax.swing.JTextField.LEFT);
         jPswClave.addActionListener(new java.awt.event.ActionListener() {
@@ -97,127 +106,128 @@ public class login extends javax.swing.JFrame {
                 jPswClaveActionPerformed(evt);
             }
         });
+        jPswClave.setBounds(550, 350, 220, 30);
+        jDeskInicio.add(jPswClave, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
-        org.jdesktop.layout.GroupLayout LoginLayout = new org.jdesktop.layout.GroupLayout(Login);
-        Login.setLayout(LoginLayout);
-        LoginLayout.setHorizontalGroup(
-            LoginLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(LoginLayout.createSequentialGroup()
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .add(LoginLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(org.jdesktop.layout.GroupLayout.TRAILING, LoginLayout.createSequentialGroup()
-                        .add(jLabel2)
-                        .add(106, 106, 106))
-                    .add(LoginLayout.createSequentialGroup()
-                        .add(jLabel3)
-                        .add(83, 83, 83)))
-                .add(LoginLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
-                    .add(jTxtUsuario)
-                    .add(jPswClave, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 172, Short.MAX_VALUE))
-                .add(157, 157, 157))
-            .add(LoginLayout.createSequentialGroup()
-                .add(31, 31, 31)
-                .add(LoginLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(LoginLayout.createSequentialGroup()
-                        .add(btnSalirSistema, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 114, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .add(jBtnIngresoUsuario, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 120, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                    .add(jSeparator1))
-                .add(48, 48, 48))
-            .add(LoginLayout.createSequentialGroup()
-                .add(131, 131, 131)
-                .add(jLabel1)
-                .addContainerGap(164, Short.MAX_VALUE))
-        );
-        LoginLayout.setVerticalGroup(
-            LoginLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(LoginLayout.createSequentialGroup()
-                .add(11, 11, 11)
-                .add(jLabel1)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                .add(jSeparator1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 10, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 57, Short.MAX_VALUE)
-                .add(LoginLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jTxtUsuario, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(jLabel2))
-                .add(36, 36, 36)
-                .add(LoginLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jLabel3)
-                    .add(jPswClave, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .add(51, 51, 51)
-                .add(LoginLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(btnSalirSistema, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 41, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(jBtnIngresoUsuario, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 41, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .add(29, 29, 29))
-        );
+        jTxtUsuario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTxtUsuarioActionPerformed(evt);
+            }
+        });
+        jTxtUsuario.setBounds(550, 260, 220, 30);
+        jDeskInicio.add(jTxtUsuario, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        jLabel3.setFont(new java.awt.Font("Monaco", 0, 18)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(102, 153, 255));
+        jLabel3.setText("CONTRASEÑA");
+        jLabel3.setBounds(327, 350, 130, 30);
+        jDeskInicio.add(jLabel3, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        jLabel2.setFont(new java.awt.Font("Monaco", 0, 18)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(102, 153, 255));
+        jLabel2.setText("USUARIO");
+        jLabel2.setBounds(330, 260, 120, 30);
+        jDeskInicio.add(jLabel2, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        jLabel1.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel1.setFont(new java.awt.Font("Rockwell Extra Bold", 0, 48)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(102, 153, 255));
+        jLabel1.setText("      CLÍNICA  VETERINARIA ");
+        jLabel1.setBounds(260, 60, 780, 57);
+        jDeskInicio.add(jLabel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        jSeparator1.setBackground(new java.awt.Color(0, 0, 204));
+        jSeparator1.setBounds(0, 0, 0, 12);
+        jDeskInicio.add(jSeparator1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        jSeparator2.setBackground(new java.awt.Color(0, 0, 204));
+        jSeparator2.setBounds(0, 0, 0, 12);
+        jDeskInicio.add(jSeparator2, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        jSeparator3.setBackground(new java.awt.Color(255, 255, 255));
+        jSeparator3.setForeground(new java.awt.Color(255, 255, 255));
+        jSeparator3.setBounds(70, 120, 1030, 12);
+        jDeskInicio.add(jSeparator3, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        jSeparator4.setBackground(new java.awt.Color(255, 255, 255));
+        jSeparator4.setForeground(new java.awt.Color(255, 255, 255));
+        jSeparator4.setBounds(210, 430, 790, 12);
+        jDeskInicio.add(jSeparator4, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(layout.createSequentialGroup()
-                .addContainerGap()
-                .add(Login, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .add(18, 18, 18)
+                .add(jDeskInicio, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 1243, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(18, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(14, Short.MAX_VALUE)
-                .add(Login, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(17, 17, 17))
+            .add(layout.createSequentialGroup()
+                .add(17, 17, 17)
+                .add(jDeskInicio, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 700, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(29, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSalirSistemaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirSistemaActionPerformed
-        // TODO add your handling code here:
-        
-        System.exit(0);
+        // TODO add your handling code here:            
+          
+           System.exit(0); 
     }//GEN-LAST:event_btnSalirSistemaActionPerformed
 
     private void jBtnIngresoUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnIngresoUsuarioActionPerformed
+        
         try {
         
+            
             String usuario= this.jTxtUsuario.getText();
             HomeMedicoVeterinario perfilMedico=new HomeMedicoVeterinario();
             HomeRecepcionista perfilRecepcionista=new HomeRecepcionista();
             HomeEncargadoBodega perfilEncargadoBodega=new HomeEncargadoBodega();
             
-            if(control.verificarUsuario(this.jTxtUsuario.getText(), this.jPswClave.getText()))
-            {
-                if(usuario.equals("medico") )
-                {
-                    perfilMedico.init();
-                }
-                else if(usuario.equals("recepcionista"))
-                {
+            
+            if (control.verificarUsuario(this.jTxtUsuario.getText(), this.jPswClave.getText())) {
+
+                if (usuario.equals("medico")) {
+                        
+                   perfilMedico.init();
+                    this.dispose();           
+                        
+                } else if (usuario.equals("recepcionista")) {
+                    
                     perfilRecepcionista.init();
-                }else if(usuario.equals("bodega"))
-                {
+
+                } else if (usuario.equals("bodega")) {
                     perfilEncargadoBodega.init();
                 }
-                
-            }else{
-           
-          cont++;
-          if (cont==3)
-          { JOptionPane.showMessageDialog(null,"MAXIMO DE INTENTOS PERMITIDOS, SE CIERRA LA APLICACIÓN ",
-                  "AVISO DE SISTEMA", JOptionPane.PLAIN_MESSAGE);
-            System.exit(0);
-          }
-          else
-          { JOptionPane.showMessageDialog(null,"VERIFIQUE CREDENCIALES :"+cont+" intentos fallidos",
-                  "AVISO DE SISTEMA", JOptionPane.PLAIN_MESSAGE);
-          }
-          
-         }   
+
+            } else {
+
+                cont++;
+
+                if (cont == 3) {
+                    JOptionPane.showMessageDialog(null, "MAXIMO DE INTENTOS PERMITIDOS, SE CIERRA LA APLICACIÓN ",
+                            "AVISO DE SISTEMA", JOptionPane.PLAIN_MESSAGE);
+                    System.exit(0);
+                } else {
+                    JOptionPane.showMessageDialog(null, "VERIFIQUE CREDENCIALES :" + cont + " intentos fallidos",
+                            "AVISO DE SISTEMA", JOptionPane.PLAIN_MESSAGE);
+                }
+           }
+            
+        
         }
                         
          catch (Exception ex) {
             Logger.getLogger(login.class.getName()).log(Level.SEVERE, null, ex);
         }
+     
+
                   
     }//GEN-LAST:event_jBtnIngresoUsuarioActionPerformed
     
@@ -272,16 +282,19 @@ private void jTxtUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel Login;
-    private javax.swing.JButton btnSalirSistema;
-    private javax.swing.JButton jBtnIngresoUsuario;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JOptionPane jOptionPane;
-    private javax.swing.JPasswordField jPswClave;
-    private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTextField jTxtUsuario;
+    javax.swing.JButton btnSalirSistema;
+    javax.swing.JButton jBtnIngresoUsuario;
+    javax.swing.JDesktopPane jDeskInicio;
+    javax.swing.JLabel jLabel1;
+    javax.swing.JLabel jLabel2;
+    javax.swing.JLabel jLabel3;
+    javax.swing.JOptionPane jOptionPane;
+    javax.swing.JPasswordField jPswClave;
+    javax.swing.JSeparator jSeparator1;
+    javax.swing.JSeparator jSeparator2;
+    javax.swing.JSeparator jSeparator3;
+    javax.swing.JSeparator jSeparator4;
+    javax.swing.JTextField jTxtUsuario;
     // End of variables declaration//GEN-END:variables
  
  
